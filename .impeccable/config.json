@@ -1,0 +1,33 @@
+{
+  "project": "plspress-com-pitch",
+  "standard": "merritt-studio/kit/DESIGN-STANDARD.md",
+  "note": "Deliberate exceptions, per the quality-gate checklist: document them here, never by ignoring the report. Everything not listed below was fixed, not excused.",
+  "exceptions": [
+    {
+      "rule": "gradient-text",
+      "scope": "h1 > span.foil — the word PRESS. One element, page-wide.",
+      "reason": "Not decoration and not invented. The five stops (#00EAFF 0%, #0080FF 25.25%, #8000FF 49.74%, #E619E6 74.99%, #FF0000 99.91%) and the ~160deg axis are lifted verbatim from linearGradient-1 in https://bridge.pulsechain.com/logo.svg — the client's own chain identity, and the law-6 extraction source Schyler directed us to. A holographic foil gradient is also literally what the product is: a holo die-cut sticker. DESIGN-STANDARD 3.3 caps gradient-clipped text at 2 elements per page; we use 1.",
+      "verified": "Contrast of the clipped text is not measurable by the detector; the h1 is 46-116px at weight 800 and every stop exceeds 3:1 on #000 (worst stop #FF0000 = 4.25:1, above the 3:1 large-text threshold)."
+    },
+    {
+      "rule": "shape-assembled-illustration",
+      "scope": "svg.worldmap — 720x268 sightings board.",
+      "reason": "False positive. This is a data graphic, not a pictorial scene: a plate-carree dot-matrix world map rasterised from Natural Earth 110m land polygons (1,672 dots emitted as ONE path of round-capped zero-length segments) plus 10 sighting pins. The detector counts the pins as 'primitive shapes'. Its own guidance exempts data graphics. Halftone dots are also the section's design vocabulary — the map is printed, like everything else on the page.",
+      "verified": "Rendered and eyeballed at 390/834/1280; continents identifiable, pin positions computed from real lat/lon."
+    },
+    {
+      "rule": "all-caps-body",
+      "scope": "Short mono labels only: .sub, .kicker, .edge-text, .hallmark, .status, .accept .k, .accept .chain, .map-legend, .chip-stock, .wand-toggle. All 34-47 characters.",
+      "reason": "DESIGN-STANDARD 3.5 mandates letterspaced uppercase kickers as house grammar, and the rule's own text permits uppercase for 'short labels and headings'. The two genuine long-passage hits were FIXED, not excused: the 259-char provenance block (.demo-note) and the map legend's swipe hint both dropped text-transform:uppercase.",
+      "verified": "Longest remaining all-caps run is 47 chars."
+    }
+  ],
+  "fixed_not_excused": [
+    "tiny-text 11.5px -> 12.5px on .tok .chg, .item .pls, .sform-msg",
+    "wide-tracking 0.06em removed from .shelf-note (prose, not a label); resized 11.5px -> 13.5px sans",
+    "all-caps-body on .demo-note (259 chars) and .map-legend .swipe",
+    "contrast: raw foil stops run 3.43-3.69:1 as text on the #2D2D2D panel and fail AA, so a parallel text ramp (--s1t..--s5t, 4.9-9.3:1) was introduced for anything set in type. The raw ramp is now used only for gradients, strokes and artwork.",
+    "--ink-faint raised .5 -> .56 (4.64:1 -> 5.8:1 on the panel)",
+    "two form <label hidden> elements replaced with aria-label (display:none labels have no accessible name)"
+  ]
+}

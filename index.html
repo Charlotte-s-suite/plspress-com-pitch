@@ -1,8 +1,805 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>plspress.com — a new site is being crafted</title>
-<style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#131519;color:#FAF7F0;font-family:'Iowan Old Style','Charter','Palatino',Georgia,serif;text-align:center;padding:24px;box-sizing:border-box}
-.m{width:44px;height:44px;border:1.4px solid #B08D4A;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px;background:linear-gradient(160deg,#E3C57E,#B08D4A 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
-h1{font-size:clamp(26px,6vw,44px);font-weight:600;letter-spacing:.04em;margin:0 0 10px}
-p{color:#8C919B;font-size:15px;margin:0 0 6px}.tiny{font-size:10px;letter-spacing:.24em;text-transform:uppercase;margin-top:26px;color:#7A5E2A}</style>
-</head><body><div><div class="m">M</div><h1>plspress.com</h1><p>A new site is being crafted.</p>
-<div class="tiny">Merritt Digital · demonstration build in progress</div></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLS Press — die-cut stickers for the PulseChain underground</title>
+<meta name="description" content="Weatherproof die-cut vinyl stickers, printed for the PulseChain underground. Paid for in PLS, PLSX, HEX and INC. No cards, no banks, chain ID 369.">
+<style>
+  :root{
+    /* ── palette extracted from bridge.pulsechain.com ── */
+    --field:#000000;                    /* body background */
+    --field-panel:#2D2D2D;              /* :root{--bg:#2d2d2d} */
+    --field-deep:#08080A;                /* band ground */
+    --affirm:#4CAF50;                    /* :root{--green:#4caf50} */
+    --paper:#FFFFFF;                     /* .bigLink fill */
+    --paper-ink:#111111;                 /* .bigLink text */
+    --ink:#FFFFFF;
+    --ink-dim:rgba(255,255,255,.72);     /* body copy — 10.6:1 on black */
+    --ink-faint:rgba(255,255,255,.56);   /* micro labels — 6.5:1 on black */
+    --hair:rgba(255,255,255,.14);        /* hairlines only, never text */
+    /* the five-stop foil, verbatim from their logo.svg — gradients, strokes, artwork */
+    --s1:#00EAFF; --s2:#0080FF; --s3:#8000FF; --s4:#E619E6; --s5:#FF0000;
+    /* the same ramp lifted for TEXT: the raw stops run 3.4–3.7:1 on the #2D2D2D
+       panel and fail AA, so anything set in type uses these (4.9–9.3:1). */
+    --s1t:#00EAFF; --s2t:#4DA6FF; --s3t:#A566FF; --s4t:#F06AF0; --s5t:#FF6B6B;
+    --foil:linear-gradient(160deg,var(--s1) 0%,var(--s2) 25.25%,var(--s3) 49.74%,var(--s4) 74.99%,var(--s5) 100%);
+    --sans:-apple-system,'SF Pro Display','Segoe UI',system-ui,'Helvetica Neue',Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono','Cascadia Mono','Roboto Mono',Menlo,Consolas,monospace;
+    --settle:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--field);color:var(--ink);font-family:var(--sans);font-size:15.5px;
+       line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 22px;position:relative}
+  section{padding:72px 0;position:relative;overflow:hidden}
+  a{color:inherit}
+  ::selection{background:var(--s4);color:#fff}
+  :focus-visible{outline:2px solid var(--s1);outline-offset:3px;border-radius:4px}
+
+  /* ── FOIL: gradient-clipped text. Capped at 2 elements per page (kit rule) ── */
+  .foil{background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* ── PRESS-BED ORNAMENT (§3.4 technique, press vocabulary) ── */
+  .press-mark{position:absolute;pointer-events:none;color:var(--ink);opacity:.16}
+  .press-mark svg{display:block}
+
+  /* ── THE WINDOW: matte sticker backing (#2D2D2D) on pure black ── */
+  .window{background:var(--field-panel);border-radius:16px;
+    box-shadow:0 0 0 1px var(--hair), 0 24px 60px -28px rgba(0,0,0,.9);
+    position:relative;z-index:2}
+
+  /* ── HERO ── */
+  header{position:relative;overflow:hidden;padding:0 0 52px;
+    background:radial-gradient(120% 85% at 50% -10%, #16062B 0%, #0A0418 34%, #050208 62%, var(--field) 100%)}
+  .edge-text{position:absolute;writing-mode:vertical-rl;font-family:var(--mono);font-size:10px;
+    letter-spacing:.38em;text-transform:uppercase;color:var(--ink-faint);opacity:.8}
+  .edge-l{left:9px;top:150px;transform:rotate(180deg)}
+  .edge-r{right:9px;top:150px}
+  .hero{padding:70px 0 8px;text-align:center;position:relative;z-index:2}
+  .crest{width:76px;height:76px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center}
+  .crest svg{width:76px;height:76px}
+  h1{font-weight:800;font-size:clamp(46px,13vw,116px);line-height:.9;letter-spacing:-.04em;
+     text-indent:-.04em}
+  .sub{margin-top:20px;font-family:var(--mono);font-size:clamp(10px,2.5vw,12.5px);letter-spacing:.3em;
+       text-indent:.3em;text-transform:uppercase;color:var(--ink-faint)}
+  .hero-rule{width:180px;height:2px;margin:26px auto 0;background:var(--foil);border-radius:2px}
+  .hero p.dek{max-width:52ch;margin:24px auto 0;color:var(--ink-dim)}
+  .hero-cta{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+  /* buttons — .btn-foil is the bridge's own .bigLink (white fill / #111 ink) in a foil die-cut ring */
+  .btn{display:inline-block;padding:14px 26px;border-radius:8px;font-size:13px;letter-spacing:.12em;
+       text-transform:uppercase;text-decoration:none;font-weight:700;font-family:var(--sans);
+       border:0;cursor:pointer;line-height:1.2}
+  .btn-foil{background:var(--foil);padding:2px;border-radius:10px}
+  .btn-foil span{display:block;background:var(--paper);color:var(--paper-ink);border-radius:8px;
+    padding:12px 24px}
+  .btn-line{border:1px solid rgba(255,255,255,.4);color:var(--ink);background:transparent}
+
+  /* ── LIVE WINDOW: PulseChain core token rates ── */
+  .rates{margin:46px auto 0;max-width:760px;padding:22px 24px 18px;text-align:center}
+  .rates .label{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:16px}
+  .rates .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:20px 16px}
+  .tok{text-align:center}
+  .tok .sym{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--ink-faint)}
+  .tok .val{font-weight:800;font-size:clamp(19px,4.4vw,25px);letter-spacing:-.02em;margin-top:3px;
+    font-variant-numeric:tabular-nums}
+  .tok .chg{font-family:var(--mono);font-size:12.5px;margin-top:2px;color:var(--ink-faint)}
+  .tok .chg.up{color:var(--affirm)} .tok .chg.dn{color:var(--s5t)}
+  .t1 .val{color:var(--s1t)} .t2 .val{color:var(--s2t)} .t3 .val{color:var(--s4t)} .t4 .val{color:var(--s5t)}
+  .status{margin-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-faint)}
+  .status .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--affirm);
+    margin-right:7px;vertical-align:1px}
+
+  /* ── SECTION HEADS ── */
+  .sec-head{text-align:center;margin-bottom:40px;position:relative;z-index:2}
+  .sec-head .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-indent:.3em;
+    text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px}
+  .sec-head h2{font-weight:800;font-size:clamp(28px,6vw,44px);letter-spacing:-.025em;line-height:1.05}
+  .sec-head p{max-width:56ch;margin:16px auto 0;color:var(--ink-dim)}
+  .rule-foil{width:64px;height:2px;margin:14px auto 0;background:var(--foil);border-radius:2px}
+
+  /* ── THE PRESS FLOOR: sticker grid ── */
+  #press{background:linear-gradient(180deg,var(--field) 0%,#060608 100%)}
+  #wand{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;
+    transition:opacity .3s var(--settle)}
+  .press-inner{position:relative;z-index:2}
+  .wand-bar{display:flex;justify-content:center;margin:-20px 0 34px;position:relative;z-index:3}
+  .wand-toggle{display:inline-flex;align-items:center;gap:10px;background:var(--field-panel);
+    color:var(--ink);border:1px solid var(--hair);border-radius:999px;padding:12px 20px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    cursor:pointer;min-height:44px}
+  .wand-toggle .swatch{width:26px;height:6px;border-radius:3px;background:var(--foil);opacity:.35;
+    transition:opacity .2s var(--settle)}
+  .wand-toggle[aria-pressed="true"] .swatch{opacity:1}
+  .wand-toggle .wand-state{color:var(--ink-faint)}
+  .wand-toggle[aria-pressed="true"] .wand-state{color:var(--affirm)}
+
+  .shelf{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:20px;
+    position:relative;z-index:2}
+  .item{padding:18px 18px 22px;display:flex;flex-direction:column}
+  /* the sticker: foil die-cut ring + dashed kiss-cut contour */
+  .sticker{background:var(--foil);padding:2px;border-radius:20px;
+    transition:transform .2s var(--settle), box-shadow .2s var(--settle)}
+  .sticker-face{background:radial-gradient(120% 100% at 28% 0%, #191922 0%, #0A0A0E 74%);
+    border-radius:18px;padding:22px;position:relative;display:flex;align-items:center;
+    justify-content:center;aspect-ratio:1/1}
+  .sticker-face::after{content:"";position:absolute;inset:7px;border:1px dashed rgba(255,255,255,.22);
+    border-radius:13px;pointer-events:none}
+  .sticker-face svg{width:100%;height:100%;max-width:150px;fill:none;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .item:hover .sticker,.item:focus-within .sticker{transform:translateY(-5px) rotate(-1.2deg);
+    box-shadow:0 22px 40px -22px rgba(0,0,0,.95)}
+  .item h3{font-weight:800;font-size:19px;letter-spacing:-.01em;margin-top:18px}
+  .item p{font-size:14px;color:var(--ink-dim);margin-top:7px;line-height:1.55;flex:1}
+  .item .meta{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    margin-top:16px;padding-top:14px;border-top:1px solid var(--hair)}
+  .item .usd{font-weight:800;font-size:20px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .item .pls{font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);text-align:right;
+    font-variant-numeric:tabular-nums}
+  .chip-stock{display:inline-flex;align-items:center;gap:6px;margin-top:13px;font-family:var(--mono);
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--affirm)}
+  .chip-stock::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--affirm)}
+  .shelf-note{margin:30px auto 0;max-width:62ch;text-align:center;
+    font-size:13.5px;line-height:1.7;color:var(--ink-faint);position:relative;z-index:2}
+
+  /* ── THE COUNTER: payment band ── */
+  .counter{background:var(--field-deep);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+  .counter-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:stretch;
+    position:relative;z-index:2}
+  @media(max-width:840px){.counter-grid{grid-template-columns:1fr}}
+  .counter h2{font-weight:800;font-size:clamp(27px,5vw,40px);letter-spacing:-.025em;line-height:1.08}
+  .counter .pitch p{color:var(--ink-dim);margin-top:16px;max-width:52ch}
+  .steps{margin-top:24px;display:grid;gap:14px}
+  .steps div{display:flex;gap:13px;align-items:baseline;color:var(--ink-dim);font-size:14.5px}
+  .steps b{font-family:var(--mono);font-size:12px;color:var(--s1t);flex:0 0 auto;letter-spacing:.1em}
+  .steps div:nth-child(2) b{color:var(--s3t)} .steps div:nth-child(3) b{color:var(--s4t)}
+  .accept{padding:26px;display:flex;flex-direction:column;justify-content:center}
+  .accept .k{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
+    color:var(--ink-faint);text-align:center}
+  .accept ul{list-style:none;margin-top:18px;display:grid;gap:10px}
+  .accept li{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    border:1px solid var(--hair);border-radius:10px;padding:12px 14px;min-height:44px}
+  .accept .tk{font-weight:800;font-size:15px;letter-spacing:.02em}
+  .accept .nm{font-size:12.5px;color:var(--ink-faint);flex:1;margin-left:10px}
+  .accept .px{font-family:var(--mono);font-size:12px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+  .accept .chain{margin-top:16px;text-align:center;font-family:var(--mono);font-size:11px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
+
+  /* ── IN THE WILD: dot-matrix sightings map ── */
+  .map-window{padding:22px 22px 12px;overflow:hidden}
+  .map-window .k{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:14px;text-align:center}
+  .mapwrap{width:100%;overflow-x:auto}
+  .worldmap{display:block;width:100%;min-width:520px;height:auto}
+  .land{stroke:rgba(255,255,255,.3);stroke-width:2.6;stroke-linecap:round;fill:none}
+  .pin circle.hit{fill:transparent}
+  .pin circle.core{stroke:none}
+  .pin circle.halo{fill:none;stroke-width:1.4;opacity:.55}
+  .pin.on circle.halo{opacity:1}
+  .map-legend{margin-top:12px;text-align:center;font-family:var(--mono);font-size:12px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  .map-swipe{display:none;margin-top:7px;text-align:center;font-size:13px;color:var(--ink-faint)}
+  @media(max-width:640px){.map-swipe{display:block}}
+  .sightings{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;
+    margin-top:22px;position:relative;z-index:2}
+  .sight{text-align:left;background:var(--field-panel);border:1px solid var(--hair);border-radius:12px;
+    padding:15px 16px;min-height:44px;cursor:pointer;color:var(--ink);font:inherit;
+    transition:transform .2s var(--settle),border-color .2s var(--settle)}
+  .sight:hover,.sight:focus-visible,.sight.on{transform:translateY(-3px);border-color:rgba(255,255,255,.42)}
+  .sight .where{font-weight:800;font-size:15px;letter-spacing:-.01em}
+  .sight .who{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);margin-top:4px}
+  .sight .quote{font-size:13.5px;color:var(--ink-dim);margin-top:9px;line-height:1.5}
+  .sight .bar{width:34px;height:3px;border-radius:2px;background:var(--foil);margin-top:11px;opacity:.5}
+  .sight:hover .bar,.sight:focus-visible .bar,.sight.on .bar{opacity:1}
+
+  .submit{margin-top:30px;position:relative;z-index:2;padding:24px;text-align:center}
+  .submit .k{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;
+    color:var(--ink-faint)}
+  .submit h3{font-weight:800;font-size:clamp(20px,4vw,26px);letter-spacing:-.02em;margin-top:10px}
+  .submit p{color:var(--ink-dim);font-size:14.5px;margin-top:9px;max-width:48ch;margin-inline:auto}
+  .sform{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+  .sform input{background:#0E0E12;border:1px solid var(--hair);border-radius:8px;color:var(--ink);
+    font:inherit;font-size:14.5px;padding:12px 14px;min-height:44px;min-width:190px;flex:1;max-width:280px}
+  .sform input::placeholder{color:var(--ink-faint)}
+  .sform-msg{margin-top:14px;font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;
+    color:var(--affirm);min-height:1.2em}
+
+  /* ── FOOTER ── */
+  footer{padding:56px 0 46px;background:var(--field-deep);text-align:center;position:relative;overflow:hidden}
+  .hallmarks{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
+  .hallmark{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-dim);border:1px solid var(--hair);border-radius:6px;padding:9px 14px}
+  .fine{margin-top:30px;font-size:12.5px;color:var(--ink-faint);position:relative;z-index:2;line-height:1.8}
+  .demo-note{margin-top:18px;font-family:var(--mono);font-size:12px;line-height:1.85;
+    color:rgba(255,255,255,.5);position:relative;z-index:2;max-width:74ch;margin-inline:auto}
+
+  /* ── MOTION (§5.0: all motion lives inside this wrapper) ── */
+  @media (prefers-reduced-motion: no-preference){
+    @supports (animation-timeline: view()){
+      .reveal{animation:rise both;animation-timeline:view();animation-range:entry 0% entry 55%}
+      @keyframes rise{from{opacity:0;transform:translateY(24px)}}
+    }
+    .btn-foil span{transition:background-color .2s var(--settle)}
+    .btn-foil:hover span,.btn-foil:focus-visible span{background:#EDEDED}
+    .btn-line{transition:border-color .2s var(--settle),background-color .2s var(--settle)}
+    .btn-line:hover,.btn-line:focus-visible{border-color:#fff;background:rgba(255,255,255,.07)}
+  }
+  .btn-foil:active span{background:#E2E2E2}
+  .btn-line:active{background:rgba(255,255,255,.12)}
+  .sight:active{transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<!-- shared defs: the foil gradient + the one press motif, drawn once (§3.4) -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <linearGradient id="foil" x1="76.226%" y1="7.426%" x2="23.651%" y2="92.599%">
+      <stop offset="0" stop-color="#00EAFF"/><stop offset=".2525" stop-color="#0080FF"/>
+      <stop offset=".4974" stop-color="#8000FF"/><stop offset=".7499" stop-color="#E619E6"/>
+      <stop offset=".9991" stop-color="#FF0000"/>
+    </linearGradient>
+    <g id="press-motif" stroke="currentColor" fill="none" stroke-width="1">
+      <!-- registration target -->
+      <circle cx="150" cy="140" r="54"/><circle cx="150" cy="140" r="22"/>
+      <circle cx="150" cy="140" r="72" stroke-dasharray="3 9"/>
+      <path d="M150 44v58M150 178v58M56 140h58M186 140h58"/>
+      <!-- crop marks -->
+      <path d="M28 62V28h34M492 28h-34v34M28 498v34h34M492 532h-34v-34"/>
+      <!-- plotter cut path -->
+      <path d="M62 318h336a38 38 0 0 1 38 38v128a38 38 0 0 1-38 38H100a38 38 0 0 1-38-38z"
+            stroke-dasharray="8 7"/>
+      <!-- halftone arc -->
+      <circle cx="330" cy="152" r="3.5"/><circle cx="362" cy="168" r="3"/><circle cx="392" cy="188" r="2.6"/>
+      <circle cx="418" cy="212" r="2.2"/><circle cx="440" cy="240" r="1.8"/><circle cx="457" cy="271" r="1.4"/>
+      <circle cx="300" cy="142" r="4"/><circle cx="268" cy="138" r="4.4"/>
+      <!-- trim hatch -->
+      <path d="M420 60l52 52M440 44l52 52M400 76l52 52"/>
+      <!-- second, smaller target -->
+      <circle cx="404" cy="392" r="26"/><circle cx="404" cy="392" r="9"/>
+      <path d="M404 350v26M404 408v26M362 392h26M420 392h26"/>
+    </g>
+  </defs>
+</svg>
+
+<header>
+  <div class="edge-text edge-l">Chain ID 369 · PulseChain core tokens only</div>
+  <div class="edge-text edge-r">Die-cut · weatherproof vinyl · printed in-house</div>
+
+  <div class="press-mark" style="right:-150px;top:-70px" aria-hidden="true">
+    <svg width="520" height="560" viewBox="0 0 520 560"><use href="#press-motif"/></svg>
+  </div>
+  <div class="press-mark" style="left:-190px;bottom:-120px;opacity:.1;transform:scaleX(-1)" aria-hidden="true">
+    <svg width="430" height="430" viewBox="40 130 430 430"><use href="#press-motif"/></svg>
+  </div>
+
+  <div class="wrap hero">
+    <div class="crest">
+      <svg viewBox="0 0 76 76" aria-hidden="true">
+        <circle cx="38" cy="38" r="36" fill="none" stroke="url(#foil)" stroke-width="2"/>
+        <circle cx="38" cy="38" r="29" fill="none" stroke="url(#foil)" stroke-width=".8" opacity=".55"/>
+        <path d="M15 38h10l5-11 8 22 6-15 4 8h13" fill="none" stroke="url(#foil)"
+              stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1>PLS <span class="foil">PRESS</span></h1>
+    <div class="sub">Stickers for the PulseChain underground</div>
+    <div class="hero-rule"></div>
+    <p class="dek">A small print shop with a loud opinion. Die-cut weatherproof vinyl,
+      one design at a time, paid for in the chain's own money — and nothing else.</p>
+    <div class="hero-cta">
+      <a class="btn btn-foil" href="#press"><span>Browse the press</span></a>
+      <a class="btn btn-line" href="#counter">How payment works</a>
+    </div>
+
+    <!-- LIVE ELEMENT (law 4) — seeded values render with JS off -->
+    <div class="window rates">
+      <div class="label">PulseChain core tokens — live rate</div>
+      <div class="row">
+        <div class="tok t1"><div class="sym">PLS</div>
+          <div class="val" id="p-pls">$0.00000996</div>
+          <div class="chg" id="c-pls">–</div></div>
+        <div class="tok t2"><div class="sym">PLSX</div>
+          <div class="val" id="p-plsx">$0.00000894</div>
+          <div class="chg" id="c-plsx">–</div></div>
+        <div class="tok t3"><div class="sym">HEX</div>
+          <div class="val" id="p-hex">$0.0014861</div>
+          <div class="chg" id="c-hex">–</div></div>
+        <div class="tok t4"><div class="sym">INC</div>
+          <div class="val" id="p-inc">$0.5014</div>
+          <div class="chg" id="c-inc">–</div></div>
+      </div>
+      <div class="status" id="rate-status">
+        <span class="dot" style="background:#D9A441"></span>indicative rates — live feed needs JavaScript
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ THE PRESS FLOOR ══ -->
+<section id="press">
+  <canvas id="wand" aria-hidden="true"></canvas>
+  <div class="press-mark" style="left:-170px;top:40px;opacity:.1" aria-hidden="true">
+    <svg width="460" height="500" viewBox="30 20 460 500"><use href="#press-motif"/></svg>
+  </div>
+
+  <div class="wrap press-inner">
+    <div class="sec-head reveal">
+      <div class="kicker">The press floor</div>
+      <h2>Six designs. One machine.</h2>
+      <div class="rule-foil"></div>
+      <p>Everything is cut, laminated and packed in the same room it was printed in.
+         Prices settle in PLS at the live rate the moment you check out.</p>
+    </div>
+
+    <div class="wand-bar">
+      <button type="button" class="wand-toggle" id="wand-toggle" aria-pressed="false" hidden>
+        <span class="swatch" aria-hidden="true"></span>
+        Wand trail <span class="wand-state">OFF</span>
+      </button>
+    </div>
+
+    <div class="shelf">
+
+      <article class="item window reveal">
+        <div class="sticker"><div class="sticker-face">
+          <svg viewBox="0 0 120 120" aria-label="Sticker artwork: a pulse line crossing the numerals 369">
+            <path d="M8 62h18l8-24 12 46 9-30 7 16 8-12h42" stroke="#00EAFF" stroke-width="2.6"/>
+            <circle cx="26" cy="62" r="3.4" stroke="#00EAFF"/>
+            <circle cx="112" cy="58" r="3.4" stroke="#00EAFF"/>
+            <text x="60" y="99" text-anchor="middle" fill="#00EAFF" stroke="none"
+              font-family="ui-monospace,Menlo,monospace" font-size="24" font-weight="700"
+              letter-spacing="6">369</text>
+            <path d="M18 22h84" stroke="rgba(255,255,255,.28)" stroke-dasharray="3 6"/>
+          </svg>
+        </div></div>
+        <h3>Pulse 369</h3>
+        <p>The chain ID, die-cut clean. Matte finish, no backing halo.</p>
+        <div class="chip-stock">In stock</div>
+        <div class="meta"><div class="usd" data-usd="5">$5</div>
+          <div class="pls"><span data-pls-for="5">502,008</span> PLS<br>3 in wide</div></div>
+      </article>
+
+      <article class="item window reveal">
+        <div class="sticker"><div class="sticker-face">
+          <svg viewBox="0 0 120 120" aria-label="Sticker artwork: concentric holographic foil rings">
+            <circle cx="60" cy="60" r="44" stroke="url(#foil)" stroke-width="2.8"/>
+            <circle cx="60" cy="60" r="33" stroke="url(#foil)" stroke-width="1.6" opacity=".8"/>
+            <circle cx="60" cy="60" r="22" stroke="url(#foil)" stroke-width="1.2" opacity=".6"/>
+            <path d="M34 60h9l5-12 8 24 6-16 4 8h20" stroke="url(#foil)" stroke-width="2.4"/>
+            <path d="M60 8v10M60 102v10M8 60h10M102 60h10" stroke="url(#foil)" stroke-width="1.6"/>
+          </svg>
+        </div></div>
+        <h3>Holo Foil PLS</h3>
+        <p>Spectrum foil on black. Shifts through the whole ramp under a light.</p>
+        <div class="chip-stock">In stock</div>
+        <div class="meta"><div class="usd" data-usd="7">$7</div>
+          <div class="pls"><span data-pls-for="7">702,811</span> PLS<br>2.5 in wide</div></div>
+      </article>
+
+      <article class="item window reveal">
+        <div class="sticker"><div class="sticker-face">
+          <svg viewBox="0 0 120 120" aria-label="Sticker artwork: a key forming the words self custody">
+            <circle cx="34" cy="52" r="17" stroke="#0080FF" stroke-width="2.6"/>
+            <circle cx="34" cy="52" r="6" stroke="#0080FF" stroke-width="2"/>
+            <path d="M49 58l44 24M79 71l-6 11M89 76l-5 10" stroke="#0080FF" stroke-width="2.6"/>
+            <text x="60" y="106" text-anchor="middle" fill="#0080FF" stroke="none"
+              font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700"
+              letter-spacing="2.4">SELF CUSTODY</text>
+          </svg>
+        </div></div>
+        <h3>Self Custody</h3>
+        <p>Two words, one rule. Sized for a laptop lid, matte laminate.</p>
+        <div class="chip-stock">In stock</div>
+        <div class="meta"><div class="usd" data-usd="4">$4</div>
+          <div class="pls"><span data-pls-for="4">401,606</span> PLS<br>3 in wide</div></div>
+      </article>
+
+      <article class="item window reveal">
+        <div class="sticker"><div class="sticker-face">
+          <svg viewBox="0 0 120 120" aria-label="Sticker artwork: a node network with linked validators">
+            <path d="M60 26L26 48M60 26l34 22M26 48v28M94 48v28M26 76l34 20M94 76L60 96M26 48l68 28M94 48L26 76"
+                  stroke="#8000FF" stroke-width="1.5" opacity=".75"/>
+            <circle cx="60" cy="26" r="7" stroke="#8000FF" stroke-width="2.4"/>
+            <circle cx="26" cy="48" r="6" stroke="#8000FF" stroke-width="2.2"/>
+            <circle cx="94" cy="48" r="6" stroke="#8000FF" stroke-width="2.2"/>
+            <circle cx="26" cy="76" r="6" stroke="#8000FF" stroke-width="2.2"/>
+            <circle cx="94" cy="76" r="6" stroke="#8000FF" stroke-width="2.2"/>
+            <circle cx="60" cy="96" r="7" stroke="#8000FF" stroke-width="2.4"/>
+          </svg>
+        </div></div>
+        <h3>Node Runner</h3>
+        <p>For the people keeping the chain honest from a spare room.</p>
+        <div class="chip-stock">In stock</div>
+        <div class="meta"><div class="usd" data-usd="6">$6</div>
+          <div class="pls"><span data-pls-for="6">602,410</span> PLS<br>3.5 in wide</div></div>
+      </article>
+
+      <article class="item window reveal">
+        <div class="sticker"><div class="sticker-face">
+          <svg viewBox="0 0 120 120" aria-label="Sticker artwork: a vault door with a frost crystal">
+            <circle cx="60" cy="60" r="42" stroke="#E619E6" stroke-width="2.8"/>
+            <circle cx="60" cy="60" r="13" stroke="#E619E6" stroke-width="2.2"/>
+            <path d="M60 18v13M60 89v13M18 60h13M89 60h13M30 30l9 9M81 81l9 9M90 30l-9 9M39 81l-9 9"
+                  stroke="#E619E6" stroke-width="2.4"/>
+            <path d="M60 47v26M49 53l22 14M71 53L49 67" stroke="#E619E6" stroke-width="1.4" opacity=".8"/>
+          </svg>
+        </div></div>
+        <h3>Cold Storage</h3>
+        <p>A vault door in single-line art. Gloss laminate, thick cut.</p>
+        <div class="chip-stock">In stock</div>
+        <div class="meta"><div class="usd" data-usd="5">$5</div>
+          <div class="pls"><span data-pls-for="5">502,008</span> PLS<br>3 in wide</div></div>
+      </article>
+
+      <article class="item window reveal">
+        <div class="sticker"><div class="sticker-face">
+          <svg viewBox="0 0 120 120" aria-label="Sticker artwork: a tessellated hexagon field">
+            <g stroke="#FF0000" stroke-width="2.2">
+              <path d="M60 20l17 10v20L60 60 43 50V30z"/>
+              <path d="M26 40l17 10v20L26 80 9 70V50z" opacity=".8"/>
+              <path d="M94 40l17 10v20L94 80 77 70V50z" opacity=".8"/>
+              <path d="M60 60l17 10v20l-17 10-17-10V70z" opacity=".62"/>
+            </g>
+          </svg>
+        </div></div>
+        <h3>Hex Lattice</h3>
+        <p>Tessellated hex field, printed edge to edge with no white border.</p>
+        <div class="chip-stock">In stock</div>
+        <div class="meta"><div class="usd" data-usd="6">$6</div>
+          <div class="pls"><span data-pls-for="6">602,410</span> PLS<br>3 in wide</div></div>
+      </article>
+
+    </div>
+
+    <p class="shelf-note">Artwork shown is placeholder line-art drawn for this demonstration;
+      product photographs and final copy drop straight into these tiles when the client supplies them.</p>
+  </div>
+</section>
+
+<!-- ══ THE COUNTER ══ -->
+<section class="counter" id="counter">
+  <div class="press-mark" style="right:-160px;top:-60px;opacity:.1" aria-hidden="true">
+    <svg width="440" height="470" viewBox="180 40 440 470"><use href="#press-motif"/></svg>
+  </div>
+  <div class="wrap">
+    <div class="counter-grid">
+      <div class="pitch reveal">
+        <h2>No cards. No banks.<br>The chain's own money.</h2>
+        <p>Checkout quotes the sticker in dollars so you know what you are paying, then settles
+          in whichever core token you are holding. The rate is pulled at the moment of checkout,
+          not at the moment you loaded the page.</p>
+        <div class="steps">
+          <div><b>01</b><span>Pick your designs. The cart totals in USD for sanity.</span></div>
+          <div><b>02</b><span>Choose PLS, PLSX, HEX or INC. The amount converts at the live rate.</span></div>
+          <div><b>03</b><span>Send from your own wallet. We never hold your keys or your funds.</span></div>
+        </div>
+      </div>
+
+      <div class="window accept reveal">
+        <div class="k">Accepted at the counter</div>
+        <ul>
+          <li><span class="tk" style="color:var(--s1t)">PLS</span>
+              <span class="nm">PulseChain</span><span class="px" id="a-pls">$0.00000996</span></li>
+          <li><span class="tk" style="color:var(--s2t)">PLSX</span>
+              <span class="nm">PulseX</span><span class="px" id="a-plsx">$0.00000894</span></li>
+          <li><span class="tk" style="color:var(--s4t)">HEX</span>
+              <span class="nm">HEX</span><span class="px" id="a-hex">$0.0014861</span></li>
+          <li><span class="tk" style="color:var(--s5t)">INC</span>
+              <span class="nm">Incentive</span><span class="px" id="a-inc">$0.5014</span></li>
+        </ul>
+        <div class="chain">Network · PulseChain · Chain ID 369</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ IN THE WILD ══ -->
+<section id="wild">
+  <div class="press-mark" style="left:-200px;bottom:-140px;opacity:.08" aria-hidden="true">
+    <svg width="480" height="480" viewBox="60 90 480 480"><use href="#press-motif"/></svg>
+  </div>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">In the wild</div>
+      <h2>Where they ended up.</h2>
+      <div class="rule-foil"></div>
+      <p>Every sticker that leaves the press ends up somewhere. Send a photo and a city and
+        it gets a pin on the board.</p>
+    </div>
+
+    <div class="window map-window reveal">
+      <div class="k">Sightings board</div>
+      <div class="mapwrap">
+        <svg class="worldmap" viewBox="0 0 720 268" role="img"
+             aria-label="World map showing ten sticker sightings across six continents">
+          <path class="land" d="M117 3h0M123 3h0M141 3h0M159 3h0M171 3h0M177 3h0M183 3h0M189 3h0M195 3h0M201 3h0M225 3h0M231 3h0M237 3h0M243 3h0M249 3h0M255 3h0M261 3h0M267 3h0M273 3h0M279 3h0M285 3h0M291 3h0M297 3h0M303 3h0M309 3h0M315 3h0M495 3h0M567 3h0M573 3h0M579 3h0M117 9h0M123 9h0M147 9h0M159 9h0M165 9h0M171 9h0M177 9h0M183 9h0M195 9h0M201 9h0M249 9h0M255 9h0M261 9h0M267 9h0M273 9h0M279 9h0M285 9h0M291 9h0M297 9h0M303 9h0M309 9h0M315 9h0M471 9h0M525 9h0M531 9h0M537 9h0M543 9h0M549 9h0M555 9h0M561 9h0M567 9h0M573 9h0M579 9h0M585 9h0M591 9h0M597 9h0M609 9h0M645 9h0M39 15h0M45 15h0M51 15h0M57 15h0M135 15h0M141 15h0M147 15h0M153 15h0M171 15h0M183 15h0M189 15h0M195 15h0M201 15h0M207 15h0M213 15h0M219 15h0M255 15h0M261 15h0M267 15h0M273 15h0M279 15h0M285 15h0M291 15h0M297 15h0M303 15h0M411 15h0M417 15h0M495 15h0M501 15h0M513 15h0M519 15h0M525 15h0M531 15h0M537 15h0M543 15h0M549 15h0M555 15h0M561 15h0M567 15h0M573 15h0M579 15h0M585 15h0M591 15h0M597 15h0M603 15h0M609 15h0M615 15h0M621 15h0M627 15h0M633 15h0M639 15h0M645 15h0M651 15h0M657 15h0M663 15h0M669 15h0M675 15h0M3 21h0M33 21h0M39 21h0M45 21h0M51 21h0M57 21h0M63 21h0M69 21h0M75 21h0M81 21h0M87 21h0M93 21h0M99 21h0M105 21h0M111 21h0M117 21h0M123 21h0M129 21h0M135 21h0M141 21h0M147 21h0M153 21h0M159 21h0M165 21h0M171 21h0M177 21h0M183 21h0M189 21h0M195 21h0M207 21h0M219 21h0M225 21h0M231 21h0M255 21h0M261 21h0M267 21h0M273 21h0M279 21h0M285 21h0M291 21h0M393 21h0M399 21h0M405 21h0M411 21h0M417 21h0M423 21h0M429 21h0M435 21h0M441 21h0M459 21h0M465 21h0M471 21h0M477 21h0M483 21h0M489 21h0M495 21h0M501 21h0M513 21h0M519 21h0M525 21h0M531 21h0M537 21h0M543 21h0M549 21h0M555 21h0M561 21h0M567 21h0M573 21h0M579 21h0M585 21h0M591 21h0M597 21h0M603 21h0M609 21h0M615 21h0M621 21h0M627 21h0M633 21h0M639 21h0M645 21h0M651 21h0M657 21h0M663 21h0M669 21h0M675 21h0M681 21h0M687 21h0M693 21h0M699 21h0M705 21h0M711 21h0M717 21h0M39 27h0M45 27h0M51 27h0M57 27h0M63 27h0M69 27h0M75 27h0M81 27h0M87 27h0M93 27h0M99 27h0M105 27h0M111 27h0M117 27h0M123 27h0M129 27h0M135 27h0M141 27h0M147 27h0M153 27h0M159 27h0M165 27h0M171 27h0M177 27h0M183 27h0M189 27h0M195 27h0M207 27h0M213 27h0M219 27h0M225 27h0M261 27h0M267 27h0M273 27h0M321 27h0M327 27h0M387 27h0M393 27h0M399 27h0M411 27h0M417 27h0M423 27h0M429 27h0M435 27h0M441 27h0M447 27h0M453 27h0M459 27h0M465 27h0M471 27h0M477 27h0M483 27h0M489 27h0M495 27h0M501 27h0M507 27h0M513 27h0M519 27h0M525 27h0M531 27h0M537 27h0M543 27h0M549 27h0M555 27h0M561 27h0M567 27h0M573 27h0M579 27h0M585 27h0M591 27h0M597 27h0M603 27h0M609 27h0M615 27h0M621 27h0M627 27h0M633 27h0M639 27h0M645 27h0M651 27h0M657 27h0M663 27h0M669 27h0M675 27h0M681 27h0M687 27h0M693 27h0M699 27h0M705 27h0M711 27h0M33 33h0M39 33h0M45 33h0M51 33h0M57 33h0M63 33h0M69 33h0M75 33h0M81 33h0M87 33h0M93 33h0M99 33h0M105 33h0M111 33h0M117 33h0M123 33h0M129 33h0M135 33h0M141 33h0M147 33h0M153 33h0M159 33h0M165 33h0M171 33h0M207 33h0M213 33h0M267 33h0M273 33h0M375 33h0M381 33h0M387 33h0M393 33h0M405 33h0M411 33h0M417 33h0M423 33h0M429 33h0M435 33h0M441 33h0M447 33h0M453 33h0M459 33h0M465 33h0M471 33h0M477 33h0M483 33h0M489 33h0M495 33h0M501 33h0M507 33h0M513 33h0M519 33h0M525 33h0M531 33h0M537 33h0M543 33h0M549 33h0M555 33h0M561 33h0M567 33h0M573 33h0M579 33h0M585 33h0M591 33h0M597 33h0M603 33h0M609 33h0M615 33h0M621 33h0M627 33h0M633 33h0M639 33h0M645 33h0M651 33h0M657 33h0M663 33h0M669 33h0M681 33h0M693 33h0M699 33h0M705 33h0M51 39h0M87 39h0M93 39h0M99 39h0M105 39h0M111 39h0M117 39h0M123 39h0M129 39h0M135 39h0M141 39h0M147 39h0M153 39h0M159 39h0M165 39h0M171 39h0M207 39h0M213 39h0M219 39h0M231 39h0M351 39h0M375 39h0M387 39h0M393 39h0M411 39h0M417 39h0M423 39h0M429 39h0M435 39h0M441 39h0M447 39h0M453 39h0M459 39h0M465 39h0M471 39h0M477 39h0M483 39h0M489 39h0M495 39h0M501 39h0M507 39h0M513 39h0M519 39h0M525 39h0M531 39h0M537 39h0M543 39h0M549 39h0M555 39h0M561 39h0M567 39h0M573 39h0M579 39h0M585 39h0M591 39h0M597 39h0M603 39h0M609 39h0M615 39h0M621 39h0M627 39h0M633 39h0M639 39h0M681 39h0M99 45h0M105 45h0M111 45h0M117 45h0M123 45h0M129 45h0M135 45h0M141 45h0M147 45h0M153 45h0M159 45h0M165 45h0M171 45h0M177 45h0M183 45h0M207 45h0M213 45h0M219 45h0M225 45h0M231 45h0M237 45h0M351 45h0M387 45h0M405 45h0M411 45h0M417 45h0M423 45h0M429 45h0M435 45h0M441 45h0M447 45h0M453 45h0M459 45h0M465 45h0M471 45h0M477 45h0M483 45h0M489 45h0M495 45h0M501 45h0M507 45h0M513 45h0M519 45h0M525 45h0M531 45h0M537 45h0M543 45h0M549 45h0M555 45h0M561 45h0M567 45h0M573 45h0M579 45h0M585 45h0M591 45h0M597 45h0M603 45h0M609 45h0M615 45h0M621 45h0M627 45h0M675 45h0M681 45h0M105 51h0M111 51h0M117 51h0M123 51h0M129 51h0M135 51h0M141 51h0M147 51h0M153 51h0M159 51h0M165 51h0M171 51h0M177 51h0M183 51h0M189 51h0M195 51h0M207 51h0M213 51h0M219 51h0M225 51h0M231 51h0M237 51h0M243 51h0M345 51h0M357 51h0M363 51h0M369 51h0M375 51h0M381 51h0M387 51h0M393 51h0M399 51h0M405 51h0M411 51h0M417 51h0M423 51h0M429 51h0M435 51h0M441 51h0M447 51h0M453 51h0M459 51h0M465 51h0M471 51h0M477 51h0M483 51h0M489 51h0M495 51h0M501 51h0M507 51h0M513 51h0M519 51h0M525 51h0M531 51h0M537 51h0M543 51h0M549 51h0M555 51h0M561 51h0M567 51h0M573 51h0M579 51h0M585 51h0M591 51h0M597 51h0M603 51h0M609 51h0M615 51h0M621 51h0M627 51h0M633 51h0M639 51h0M645 51h0M675 51h0M117 57h0M123 57h0M129 57h0M135 57h0M141 57h0M147 57h0M153 57h0M159 57h0M165 57h0M171 57h0M177 57h0M183 57h0M189 57h0M195 57h0M201 57h0M207 57h0M213 57h0M219 57h0M225 57h0M357 57h0M363 57h0M369 57h0M375 57h0M381 57h0M387 57h0M393 57h0M399 57h0M405 57h0M411 57h0M417 57h0M423 57h0M429 57h0M435 57h0M441 57h0M447 57h0M453 57h0M459 57h0M465 57h0M471 57h0M477 57h0M483 57h0M489 57h0M495 57h0M501 57h0M507 57h0M513 57h0M519 57h0M525 57h0M531 57h0M537 57h0M543 57h0M549 57h0M555 57h0M561 57h0M567 57h0M573 57h0M579 57h0M585 57h0M591 57h0M597 57h0M603 57h0M609 57h0M615 57h0M621 57h0M627 57h0M633 57h0M639 57h0M645 57h0M117 63h0M123 63h0M129 63h0M135 63h0M141 63h0M147 63h0M153 63h0M159 63h0M165 63h0M171 63h0M177 63h0M183 63h0M189 63h0M195 63h0M201 63h0M207 63h0M213 63h0M219 63h0M225 63h0M357 63h0M363 63h0M369 63h0M375 63h0M381 63h0M387 63h0M393 63h0M399 63h0M405 63h0M411 63h0M417 63h0M429 63h0M441 63h0M447 63h0M453 63h0M459 63h0M471 63h0M477 63h0M483 63h0M489 63h0M495 63h0M501 63h0M507 63h0M513 63h0M519 63h0M525 63h0M531 63h0M537 63h0M543 63h0M549 63h0M555 63h0M561 63h0M567 63h0M573 63h0M579 63h0M585 63h0M591 63h0M597 63h0M603 63h0M609 63h0M615 63h0M621 63h0M627 63h0M633 63h0M645 63h0M117 69h0M123 69h0M129 69h0M135 69h0M141 69h0M147 69h0M153 69h0M159 69h0M165 69h0M171 69h0M177 69h0M183 69h0M189 69h0M195 69h0M201 69h0M207 69h0M213 69h0M219 69h0M345 69h0M357 69h0M363 69h0M369 69h0M381 69h0M387 69h0M393 69h0M399 69h0M405 69h0M411 69h0M441 69h0M447 69h0M453 69h0M465 69h0M471 69h0M477 69h0M483 69h0M489 69h0M495 69h0M501 69h0M507 69h0M513 69h0M519 69h0M525 69h0M531 69h0M537 69h0M543 69h0M549 69h0M555 69h0M561 69h0M567 69h0M573 69h0M579 69h0M585 69h0M591 69h0M597 69h0M603 69h0M609 69h0M615 69h0M621 69h0M627 69h0M645 69h0M117 75h0M123 75h0M129 75h0M135 75h0M141 75h0M147 75h0M153 75h0M159 75h0M165 75h0M171 75h0M177 75h0M183 75h0M189 75h0M195 75h0M201 75h0M207 75h0M345 75h0M351 75h0M357 75h0M393 75h0M399 75h0M405 75h0M423 75h0M429 75h0M435 75h0M441 75h0M447 75h0M453 75h0M459 75h0M471 75h0M477 75h0M483 75h0M489 75h0M495 75h0M501 75h0M507 75h0M513 75h0M519 75h0M525 75h0M531 75h0M537 75h0M543 75h0M549 75h0M555 75h0M561 75h0M567 75h0M573 75h0M579 75h0M585 75h0M591 75h0M597 75h0M609 75h0M615 75h0M117 81h0M123 81h0M129 81h0M135 81h0M141 81h0M147 81h0M153 81h0M159 81h0M165 81h0M171 81h0M177 81h0M183 81h0M189 81h0M195 81h0M201 81h0M207 81h0M345 81h0M351 81h0M357 81h0M387 81h0M405 81h0M417 81h0M423 81h0M429 81h0M435 81h0M441 81h0M447 81h0M453 81h0M459 81h0M471 81h0M477 81h0M483 81h0M489 81h0M495 81h0M501 81h0M507 81h0M513 81h0M519 81h0M525 81h0M531 81h0M537 81h0M543 81h0M549 81h0M555 81h0M561 81h0M567 81h0M573 81h0M579 81h0M585 81h0M591 81h0M597 81h0M603 81h0M615 81h0M639 81h0M123 87h0M129 87h0M135 87h0M141 87h0M147 87h0M153 87h0M159 87h0M165 87h0M171 87h0M177 87h0M183 87h0M189 87h0M195 87h0M201 87h0M351 87h0M357 87h0M363 87h0M369 87h0M375 87h0M435 87h0M441 87h0M447 87h0M453 87h0M459 87h0M465 87h0M471 87h0M477 87h0M483 87h0M489 87h0M495 87h0M501 87h0M507 87h0M513 87h0M519 87h0M525 87h0M531 87h0M537 87h0M543 87h0M549 87h0M555 87h0M561 87h0M567 87h0M573 87h0M579 87h0M585 87h0M591 87h0M597 87h0M627 87h0M633 87h0M129 93h0M135 93h0M141 93h0M147 93h0M153 93h0M159 93h0M165 93h0M171 93h0M177 93h0M183 93h0M189 93h0M195 93h0M345 93h0M351 93h0M357 93h0M363 93h0M369 93h0M375 93h0M381 93h0M387 93h0M405 93h0M411 93h0M435 93h0M441 93h0M447 93h0M453 93h0M459 93h0M465 93h0M471 93h0M477 93h0M483 93h0M489 93h0M495 93h0M501 93h0M507 93h0M513 93h0M519 93h0M525 93h0M531 93h0M537 93h0M543 93h0M549 93h0M555 93h0M561 93h0M567 93h0M573 93h0M579 93h0M585 93h0M591 93h0M597 93h0M603 93h0M621 93h0M141 99h0M147 99h0M153 99h0M159 99h0M165 99h0M195 99h0M339 99h0M345 99h0M351 99h0M357 99h0M363 99h0M369 99h0M375 99h0M381 99h0M387 99h0M393 99h0M399 99h0M405 99h0M411 99h0M417 99h0M423 99h0M435 99h0M441 99h0M447 99h0M453 99h0M465 99h0M471 99h0M477 99h0M483 99h0M489 99h0M495 99h0M501 99h0M507 99h0M513 99h0M519 99h0M525 99h0M531 99h0M537 99h0M543 99h0M549 99h0M555 99h0M561 99h0M567 99h0M573 99h0M579 99h0M585 99h0M591 99h0M597 99h0M603 99h0M147 105h0M153 105h0M159 105h0M165 105h0M333 105h0M339 105h0M345 105h0M351 105h0M357 105h0M363 105h0M369 105h0M375 105h0M381 105h0M387 105h0M393 105h0M399 105h0M405 105h0M411 105h0M417 105h0M423 105h0M429 105h0M435 105h0M441 105h0M447 105h0M453 105h0M459 105h0M483 105h0M489 105h0M495 105h0M501 105h0M507 105h0M513 105h0M519 105h0M525 105h0M531 105h0M537 105h0M543 105h0M549 105h0M555 105h0M561 105h0M567 105h0M573 105h0M579 105h0M585 105h0M591 105h0M597 105h0M153 111h0M159 111h0M201 111h0M333 111h0M339 111h0M345 111h0M351 111h0M357 111h0M363 111h0M369 111h0M375 111h0M381 111h0M387 111h0M393 111h0M399 111h0M405 111h0M411 111h0M417 111h0M423 111h0M429 111h0M441 111h0M447 111h0M453 111h0M459 111h0M465 111h0M471 111h0M477 111h0M501 111h0M507 111h0M513 111h0M519 111h0M525 111h0M531 111h0M537 111h0M549 111h0M555 111h0M561 111h0M567 111h0M573 111h0M579 111h0M585 111h0M153 117h0M159 117h0M165 117h0M183 117h0M219 117h0M333 117h0M339 117h0M345 117h0M351 117h0M357 117h0M363 117h0M369 117h0M375 117h0M381 117h0M387 117h0M393 117h0M399 117h0M405 117h0M411 117h0M417 117h0M423 117h0M429 117h0M447 117h0M453 117h0M459 117h0M465 117h0M471 117h0M507 117h0M513 117h0M519 117h0M525 117h0M549 117h0M555 117h0M561 117h0M567 117h0M579 117h0M165 123h0M171 123h0M177 123h0M183 123h0M327 123h0M333 123h0M339 123h0M345 123h0M351 123h0M357 123h0M363 123h0M369 123h0M375 123h0M381 123h0M387 123h0M393 123h0M399 123h0M405 123h0M411 123h0M417 123h0M423 123h0M429 123h0M435 123h0M447 123h0M453 123h0M459 123h0M465 123h0M507 123h0M513 123h0M519 123h0M549 123h0M555 123h0M561 123h0M567 123h0M573 123h0M603 123h0M183 129h0M189 129h0M327 129h0M333 129h0M339 129h0M345 129h0M351 129h0M357 129h0M363 129h0M369 129h0M375 129h0M381 129h0M387 129h0M393 129h0M399 129h0M405 129h0M411 129h0M417 129h0M423 129h0M429 129h0M435 129h0M441 129h0M447 129h0M453 129h0M513 129h0M519 129h0M561 129h0M567 129h0M573 129h0M189 135h0M213 135h0M219 135h0M225 135h0M237 135h0M333 135h0M339 135h0M345 135h0M351 135h0M357 135h0M363 135h0M369 135h0M375 135h0M381 135h0M387 135h0M393 135h0M399 135h0M405 135h0M411 135h0M417 135h0M423 135h0M429 135h0M435 135h0M441 135h0M447 135h0M453 135h0M459 135h0M513 135h0M519 135h0M573 135h0M207 141h0M213 141h0M219 141h0M225 141h0M231 141h0M237 141h0M339 141h0M345 141h0M351 141h0M357 141h0M363 141h0M369 141h0M375 141h0M381 141h0M387 141h0M393 141h0M399 141h0M405 141h0M411 141h0M417 141h0M423 141h0M429 141h0M435 141h0M441 141h0M447 141h0M453 141h0M459 141h0M609 141h0M207 147h0M213 147h0M219 147h0M225 147h0M231 147h0M237 147h0M243 147h0M249 147h0M255 147h0M345 147h0M375 147h0M381 147h0M387 147h0M393 147h0M399 147h0M405 147h0M411 147h0M417 147h0M423 147h0M429 147h0M435 147h0M441 147h0M447 147h0M453 147h0M555 147h0M591 147h0M597 147h0M207 153h0M213 153h0M219 153h0M225 153h0M231 153h0M237 153h0M243 153h0M249 153h0M255 153h0M381 153h0M387 153h0M393 153h0M399 153h0M405 153h0M411 153h0M417 153h0M423 153h0M429 153h0M435 153h0M441 153h0M447 153h0M561 153h0M567 153h0M579 153h0M585 153h0M591 153h0M201 159h0M207 159h0M213 159h0M219 159h0M225 159h0M231 159h0M237 159h0M243 159h0M249 159h0M255 159h0M261 159h0M267 159h0M381 159h0M387 159h0M393 159h0M399 159h0M405 159h0M411 159h0M417 159h0M423 159h0M429 159h0M435 159h0M441 159h0M567 159h0M585 159h0M591 159h0M603 159h0M627 159h0M201 165h0M207 165h0M213 165h0M219 165h0M225 165h0M231 165h0M237 165h0M243 165h0M249 165h0M255 165h0M261 165h0M267 165h0M273 165h0M279 165h0M387 165h0M393 165h0M399 165h0M405 165h0M411 165h0M417 165h0M423 165h0M429 165h0M435 165h0M567 165h0M633 165h0M639 165h0M645 165h0M201 171h0M207 171h0M213 171h0M219 171h0M225 171h0M231 171h0M237 171h0M243 171h0M249 171h0M255 171h0M261 171h0M267 171h0M273 171h0M279 171h0M285 171h0M387 171h0M393 171h0M399 171h0M405 171h0M411 171h0M417 171h0M423 171h0M429 171h0M435 171h0M579 171h0M585 171h0M639 171h0M645 171h0M651 171h0M207 177h0M213 177h0M219 177h0M225 177h0M231 177h0M237 177h0M243 177h0M249 177h0M255 177h0M261 177h0M267 177h0M273 177h0M279 177h0M285 177h0M387 177h0M393 177h0M399 177h0M405 177h0M411 177h0M417 177h0M423 177h0M429 177h0M435 177h0M213 183h0M219 183h0M225 183h0M231 183h0M237 183h0M243 183h0M249 183h0M255 183h0M261 183h0M267 183h0M273 183h0M279 183h0M387 183h0M393 183h0M399 183h0M405 183h0M411 183h0M417 183h0M423 183h0M429 183h0M435 183h0M441 183h0M459 183h0M621 183h0M627 183h0M645 183h0M219 189h0M225 189h0M231 189h0M237 189h0M243 189h0M249 189h0M255 189h0M261 189h0M267 189h0M273 189h0M279 189h0M387 189h0M393 189h0M399 189h0M405 189h0M411 189h0M417 189h0M423 189h0M429 189h0M435 189h0M453 189h0M459 189h0M609 189h0M615 189h0M621 189h0M627 189h0M633 189h0M645 189h0M651 189h0M225 195h0M231 195h0M237 195h0M243 195h0M249 195h0M255 195h0M261 195h0M267 195h0M273 195h0M279 195h0M387 195h0M393 195h0M399 195h0M405 195h0M411 195h0M417 195h0M423 195h0M429 195h0M453 195h0M603 195h0M609 195h0M615 195h0M621 195h0M627 195h0M633 195h0M639 195h0M645 195h0M651 195h0M225 201h0M231 201h0M237 201h0M243 201h0M249 201h0M255 201h0M261 201h0M267 201h0M273 201h0M393 201h0M399 201h0M405 201h0M411 201h0M417 201h0M423 201h0M429 201h0M447 201h0M453 201h0M591 201h0M597 201h0M603 201h0M609 201h0M615 201h0M621 201h0M627 201h0M633 201h0M639 201h0M645 201h0M651 201h0M657 201h0M219 207h0M225 207h0M231 207h0M237 207h0M243 207h0M249 207h0M255 207h0M261 207h0M393 207h0M399 207h0M405 207h0M411 207h0M417 207h0M423 207h0M591 207h0M597 207h0M603 207h0M609 207h0M615 207h0M621 207h0M627 207h0M633 207h0M639 207h0M645 207h0M651 207h0M657 207h0M663 207h0M219 213h0M225 213h0M231 213h0M237 213h0M243 213h0M249 213h0M255 213h0M261 213h0M393 213h0M399 213h0M405 213h0M411 213h0M417 213h0M423 213h0M591 213h0M597 213h0M603 213h0M609 213h0M615 213h0M621 213h0M627 213h0M633 213h0M639 213h0M645 213h0M651 213h0M657 213h0M663 213h0M219 219h0M225 219h0M231 219h0M237 219h0M243 219h0M249 219h0M255 219h0M399 219h0M405 219h0M411 219h0M417 219h0M597 219h0M603 219h0M609 219h0M615 219h0M621 219h0M627 219h0M633 219h0M639 219h0M645 219h0M651 219h0M657 219h0M663 219h0M219 225h0M225 225h0M231 225h0M237 225h0M243 225h0M249 225h0M399 225h0M597 225h0M639 225h0M645 225h0M651 225h0M657 225h0M213 231h0M219 231h0M225 231h0M231 231h0M237 231h0M243 231h0M645 231h0M651 231h0M657 231h0M711 231h0M213 237h0M219 237h0M225 237h0M231 237h0M711 237h0M219 243h0M225 243h0M705 243h0M213 249h0M219 249h0M225 249h0M699 249h0M213 255h0M219 255h0M213 261h0M219 261h0"/>
+          <g id="pins">
+            <g class="pin" data-pin="lisbon"><circle class="halo" cx="342" cy="79" r="8" stroke="#00EAFF"/><circle class="core" cx="342" cy="79" r="3.4" fill="#00EAFF"/></g>
+            <g class="pin" data-pin="berlin"><circle class="halo" cx="387" cy="51" r="8" stroke="#0080FF"/><circle class="core" cx="387" cy="51" r="3.4" fill="#0080FF"/></g>
+            <g class="pin" data-pin="dubai"><circle class="halo" cx="471" cy="106" r="8" stroke="#8000FF"/><circle class="core" cx="471" cy="106" r="3.4" fill="#8000FF"/></g>
+            <g class="pin" data-pin="chiangmai"><circle class="halo" cx="558" cy="118" r="8" stroke="#E619E6"/><circle class="core" cx="558" cy="118" r="3.4" fill="#E619E6"/></g>
+            <g class="pin" data-pin="tokyo"><circle class="halo" cx="639" cy="85" r="8" stroke="#FF0000"/><circle class="core" cx="639" cy="85" r="3.4" fill="#FF0000"/></g>
+            <g class="pin" data-pin="bali"><circle class="halo" cx="590" cy="173" r="8" stroke="#00EAFF"/><circle class="core" cx="590" cy="173" r="3.4" fill="#00EAFF"/></g>
+            <g class="pin" data-pin="austin"><circle class="halo" cx="165" cy="96" r="8" stroke="#0080FF"/><circle class="core" cx="165" cy="96" r="3.4" fill="#0080FF"/></g>
+            <g class="pin" data-pin="medellin"><circle class="halo" cx="209" cy="144" r="8" stroke="#8000FF"/><circle class="core" cx="209" cy="144" r="3.4" fill="#8000FF"/></g>
+            <g class="pin" data-pin="capetown"><circle class="halo" cx="397" cy="224" r="8" stroke="#E619E6"/><circle class="core" cx="397" cy="224" r="3.4" fill="#E619E6"/></g>
+            <g class="pin" data-pin="buenosaires"><circle class="halo" cx="243" cy="225" r="8" stroke="#FF0000"/><circle class="core" cx="243" cy="225" r="3.4" fill="#FF0000"/></g>
+          </g>
+        </svg>
+      </div>
+      <div class="map-legend">10 seeded sightings · six continents</div>
+      <p class="map-swipe">Swipe the board sideways to see every pin.</p>
+    </div>
+
+    <div class="sightings">
+      <button type="button" class="sight" data-sight="lisbon">
+        <div class="where">Lisbon, Portugal</div><div class="who">Marta R. · Holo Foil PLS</div>
+        <div class="quote">"On the lid of the laptop that pays my rent."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="berlin">
+        <div class="where">Berlin, Germany</div><div class="who">Jonas K. · Node Runner</div>
+        <div class="quote">"Stuck it on the rack. The rack has earned it."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="dubai">
+        <div class="where">Dubai, UAE</div><div class="who">Amal S. · Cold Storage</div>
+        <div class="quote">"Survived a summer on a balcony. Still perfect."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="chiangmai">
+        <div class="where">Chiang Mai, Thailand</div><div class="who">Pim T. · Pulse 369</div>
+        <div class="quote">"Every café here knows this sticker now."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="tokyo">
+        <div class="where">Tokyo, Japan</div><div class="who">Kenji M. · Hex Lattice</div>
+        <div class="quote">"Went on the guitar case. No regrets."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="bali">
+        <div class="where">Bali, Indonesia</div><div class="who">Sofie D. · Self Custody</div>
+        <div class="quote">"Two words that saved me a lot of money."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="austin">
+        <div class="where">Austin, Texas</div><div class="who">Ray B. · Node Runner</div>
+        <div class="quote">"Truck window. Gets more questions than the truck."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="medellin">
+        <div class="where">Medellín, Colombia</div><div class="who">Diana O. · Holo Foil PLS</div>
+        <div class="quote">"The foil catches the light on the way up the hill."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="capetown">
+        <div class="where">Cape Town, South Africa</div><div class="who">Thabo N. · Pulse 369</div>
+        <div class="quote">"Surfboard. Salt water hasn't touched it."</div><div class="bar"></div></button>
+      <button type="button" class="sight" data-sight="buenosaires">
+        <div class="where">Buenos Aires, Argentina</div><div class="who">Lucía F. · Cold Storage</div>
+        <div class="quote">"On the fridge, next to the shopping list."</div><div class="bar"></div></button>
+    </div>
+
+    <div class="window submit reveal">
+      <div class="k">Add your pin</div>
+      <h3>Send a photo, get a pin.</h3>
+      <p>City and a picture is all it takes. Approved sightings go on the board the same week.</p>
+      <form class="sform" id="sight-form" novalidate>
+        <input id="s-city" type="text" placeholder="Your city" aria-label="Your city"
+               autocomplete="address-level2">
+        <input id="s-handle" type="text" placeholder="Name or handle" aria-label="Name or handle"
+               autocomplete="nickname">
+        <button type="submit" class="btn btn-foil"><span>Submit sighting</span></button>
+      </form>
+      <div class="sform-msg" id="sight-msg" role="status"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="press-mark" style="left:50%;top:-120px;margin-left:-260px;opacity:.08" aria-hidden="true">
+    <svg width="520" height="420" viewBox="0 60 520 420"><use href="#press-motif"/></svg>
+  </div>
+  <div class="wrap">
+    <div class="hallmarks">
+      <div class="hallmark">PulseChain core tokens only</div>
+      <div class="hallmark">Chain ID 369</div>
+      <div class="hallmark">Die-cut vinyl</div>
+      <div class="hallmark">PLS · PLSX · HEX · INC</div>
+      <div class="hallmark">No cards, no banks</div>
+    </div>
+    <div class="fine">
+      PLS Press · plspress.com<br>
+      Printed, cut and packed in-house.
+    </div>
+    <div class="demo-note">
+      Design concept by Merritt Digital · demonstration build ·
+      product artwork and copy are placeholders pending client files ·
+      token rates are live from CoinGecko and indicative only ·
+      no wallet connection and no order is processed in this build
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── LIVE RATES (law 4 / §3.9 fail-soft) ─────────────────────────────────── */
+(function(){
+  var st = document.getElementById('rate-status');
+  var MAP = {
+    pls:  'pulsechain',
+    plsx: 'pulsex',
+    hex:  'hex',
+    inc:  'pulsex-incentive-token'
+  };
+  function fmtUsd(v){
+    if (v >= 1)    return '$' + v.toFixed(2);
+    if (v >= 0.01) return '$' + v.toFixed(4);
+    if (v >= 0.0001) return '$' + v.toFixed(7);
+    return '$' + v.toFixed(8);
+  }
+  function amber(msg){
+    st.innerHTML = '<span class="dot" style="background:#D9A441"></span>' + msg;
+  }
+  amber('indicative rates — connecting to live feed…');
+
+  var url = 'https://api.coingecko.com/api/v3/simple/price?ids=' +
+            'pulsechain,pulsex,hex,pulsex-incentive-token' +
+            '&vs_currencies=usd&include_24hr_change=true';
+
+  fetch(url, {mode:'cors'}).then(function(r){
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r.json();
+  }).then(function(d){
+    var wrote = 0, plsUsd = null;
+    Object.keys(MAP).forEach(function(k){
+      var row = d[MAP[k]];
+      if (!row || typeof row.usd !== 'number' || !isFinite(row.usd) || row.usd <= 0) return;
+      wrote++;
+      if (k === 'pls') plsUsd = row.usd;
+      var txt = fmtUsd(row.usd);
+      var a = document.getElementById('p-' + k); if (a) a.textContent = txt;
+      var b = document.getElementById('a-' + k); if (b) b.textContent = txt;
+      var c = document.getElementById('c-' + k);
+      if (c && typeof row.usd_24h_change === 'number' && isFinite(row.usd_24h_change)) {
+        var ch = row.usd_24h_change;
+        c.textContent = (ch >= 0 ? '+' : '') + ch.toFixed(2) + '% 24h';
+        c.className = 'chg ' + (ch >= 0 ? 'up' : 'dn');
+      }
+    });
+    if (!wrote) throw new Error('no usable rows');
+
+    /* re-price every sticker in PLS at the live rate */
+    if (plsUsd) {
+      var nodes = document.querySelectorAll('[data-pls-for]');
+      for (var i = 0; i < nodes.length; i++) {
+        var usd = parseFloat(nodes[i].getAttribute('data-pls-for'));
+        if (isFinite(usd)) nodes[i].textContent = Math.round(usd / plsUsd).toLocaleString('en-US');
+      }
+    }
+    st.innerHTML = '<span class="dot"></span>live · updated ' +
+      new Date().toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+  }).catch(function(){
+    amber('indicative rates — live rate unavailable just now');
+  });
+})();
+
+/* ── WAND TRAIL (the one hero moment, §5.0.5) ────────────────────────────── */
+(function(){
+  var sec = document.getElementById('press');
+  var cv  = document.getElementById('wand');
+  var btn = document.getElementById('wand-toggle');
+  if (!sec || !cv || !btn || !cv.getContext) return;
+
+  var ctx = cv.getContext('2d');
+  var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : {matches:false};
+  var STOPS = ['#00EAFF','#0080FF','#8000FF','#E619E6','#FF0000'];
+  var LIFE = 700;
+  var pts = [], raf = 0, on = false, w = 0, h = 0;
+
+  function load(){ try { return localStorage.getItem('plspress-wand'); } catch(e){ return null; } }
+  function save(v){ try { localStorage.setItem('plspress-wand', v); } catch(e){} }
+
+  function size(){
+    var r = sec.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = Math.round(r.width); h = Math.round(r.height);
+    cv.width  = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+    cv.style.width = w + 'px'; cv.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function draw(){
+    raf = 0;
+    var now = performance.now(), i, p, age;
+    for (i = pts.length - 1; i >= 0; i--) if (now - pts[i].t > LIFE) pts.splice(i, 1);
+    ctx.clearRect(0, 0, w, h);
+
+    if (pts.length > 1) {
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      for (i = 1; i < pts.length; i++) {
+        var a = pts[i-1], b = pts[i];
+        age = (now - b.t) / LIFE;
+        var g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+        g.addColorStop(0, STOPS[i % 5]);
+        g.addColorStop(1, STOPS[(i + 1) % 5]);
+        ctx.strokeStyle = g;
+        ctx.globalAlpha = Math.max(0, 1 - age) * 0.85;
+        ctx.lineWidth = Math.max(1, 11 * (1 - age));
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+      for (i = 0; i < pts.length; i += 2) {
+        p = pts[i]; age = (now - p.t) / LIFE;
+        if (age > 1) continue;
+        ctx.globalAlpha = (1 - age) * 0.75;
+        ctx.fillStyle = STOPS[i % 5];
+        ctx.beginPath();
+        ctx.arc(p.x + p.dx * age * 30, p.y + p.dy * age * 30, Math.max(0, 2.4 * (1 - age)), 0, 6.2832);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    if (pts.length) raf = requestAnimationFrame(draw);
+  }
+
+  function move(e){
+    if (!on || document.hidden) return;
+    var r = sec.getBoundingClientRect();
+    var x = e.clientX - r.left, y = e.clientY - r.top;
+    if (x < 0 || y < 0 || x > w || y > h) return;
+    pts.push({x:x, y:y, t:performance.now(), dx:(Math.random()-0.5), dy:(Math.random()-0.5)-0.45});
+    if (pts.length > 28) pts.shift();
+    if (!raf) raf = requestAnimationFrame(draw);
+  }
+
+  function stop(){
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    pts = []; ctx.clearRect(0, 0, w, h);
+  }
+
+  function set(v){
+    on = v;
+    btn.setAttribute('aria-pressed', String(v));
+    btn.querySelector('.wand-state').textContent = v ? 'ON' : 'OFF';
+    cv.style.opacity = v ? '1' : '0';
+    if (!v) stop();
+    save(v ? '1' : '0');
+  }
+
+  function init(){
+    size();
+    window.addEventListener('resize', size, {passive:true});
+    if (window.ResizeObserver) new ResizeObserver(size).observe(sec);
+    sec.addEventListener('pointermove', move, {passive:true});
+    document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); });
+    btn.addEventListener('click', function(){ set(!on); });
+    btn.hidden = false;
+    var s = load();
+    set(s === null ? !reduce.matches : s === '1');
+  }
+
+  if ('requestIdleCallback' in window) requestIdleCallback(init, {timeout:2000});
+  else setTimeout(init, 500);
+})();
+
+/* ── SIGHTINGS: list ⇄ pin sync ──────────────────────────────────────────── */
+(function(){
+  var cards = document.querySelectorAll('.sight');
+  var pins  = document.querySelectorAll('.pin');
+  if (!cards.length || !pins.length) return;
+
+  function select(key){
+    for (var i = 0; i < cards.length; i++)
+      cards[i].classList.toggle('on', cards[i].getAttribute('data-sight') === key);
+    for (var j = 0; j < pins.length; j++)
+      pins[j].classList.toggle('on', pins[j].getAttribute('data-pin') === key);
+  }
+  for (var i = 0; i < cards.length; i++) {
+    (function(el){
+      var key = el.getAttribute('data-sight');
+      el.addEventListener('click', function(){ select(key); });
+      el.addEventListener('focus', function(){ select(key); });
+      el.addEventListener('mouseenter', function(){ select(key); });
+    })(cards[i]);
+  }
+
+  var form = document.getElementById('sight-form');
+  var msg  = document.getElementById('sight-msg');
+  if (form && msg) form.addEventListener('submit', function(e){
+    e.preventDefault();
+    msg.textContent = 'Demonstration build — submissions activate on the production domain.';
+  });
+})();
+</script>
+</body>
+</html>
