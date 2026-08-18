@@ -120,7 +120,10 @@
 
   .shelf{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:20px;
     position:relative;z-index:2}
-  .item{padding:18px 18px 22px;display:flex;flex-direction:column}
+  /* 20% opaque card face — the near-black press bed and the wand trail read through it.
+     Only the backing is translucent; type and artwork stay fully opaque. */
+  .item{padding:18px 18px 22px;display:flex;flex-direction:column;
+    background:rgba(45,45,45,.2)}
   /* the sticker: foil die-cut ring + dashed kiss-cut contour */
   .sticker{background:var(--foil);padding:2px;border-radius:20px;
     transition:transform .2s var(--settle), box-shadow .2s var(--settle)}
