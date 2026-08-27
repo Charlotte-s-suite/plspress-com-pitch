@@ -76,7 +76,14 @@ holographic foil. A holo foil is a sticker. That is the whole design.
    *Gotcha worth keeping:* a `var()` inside a custom property resolves against the element that
    **declares** it, so a single `--mid-bloom` parameterised by an overridable `--mid-anchor` silently
    used `:root`'s value and bloomed at the centre of `#press` instead of its edge. Two tokens, not one.
-3. **Wand trail → wand ripple.** Same canvas, same toggle, same persistence and reduced-motion
+3. **Press-floor copy is now the client's.** Head: "Take grassroots marketing into your own
+   hands." Deck: "Premium stickers, for the greatest community in crypto." — both from Schyler on
+   2026-08-27, lightly set. The deck keeps one clause of the old copy (in-house finishing, priced
+   in PLS at the live rate) because the live-rate note is what explains the PLS figure on every
+   card. `.sec-head h2` picked up `max-width:22ch` + `text-wrap:balance` so the longer head does
+   not rag to a one-word last line; `.sec-head p` picked up `text-wrap:pretty`. Both degrade to
+   normal wrapping where unsupported.
+4. **Wand trail → wand ripple.** Same canvas, same toggle, same persistence and reduced-motion
    defaults; the drawing changed from a tapering gradient polyline to discrete expanding rings —
    two concentric strokes with the inner one lagging, plus a crest that fades as the ring escapes
    it. Ripples only spawn once the pointer has travelled 26px, which is what stops it collapsing

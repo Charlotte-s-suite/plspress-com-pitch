@@ -109,8 +109,11 @@
   .sec-head{text-align:center;margin-bottom:40px;position:relative;z-index:2}
   .sec-head .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-indent:.3em;
     text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px}
-  .sec-head h2{font-weight:800;font-size:clamp(28px,6vw,44px);letter-spacing:-.025em;line-height:1.05}
-  .sec-head p{max-width:56ch;margin:16px auto 0;color:var(--ink-dim)}
+  /* balance/pretty keep a long head off a one-word last line; both degrade to
+     normal wrapping where unsupported, so nothing depends on them. */
+  .sec-head h2{font-weight:800;font-size:clamp(28px,6vw,44px);letter-spacing:-.025em;line-height:1.05;
+    max-width:22ch;margin:0 auto;text-wrap:balance}
+  .sec-head p{max-width:56ch;margin:16px auto 0;color:var(--ink-dim);text-wrap:pretty}
   .rule-foil{width:64px;height:2px;margin:14px auto 0;background:var(--foil);border-radius:2px}
 
   /* ── THE PRESS FLOOR: sticker grid ── */
@@ -319,10 +322,10 @@
   <div class="wrap press-inner">
     <div class="sec-head reveal">
       <div class="kicker">The press floor</div>
-      <h2>Six designs. One machine.</h2>
+      <h2>Take grassroots marketing into your own hands.</h2>
       <div class="rule-foil"></div>
-      <p>Everything is cut, laminated and packed in the same room it was printed in.
-         Prices settle in PLS at the live rate the moment you check out.</p>
+      <p>Premium stickers, for the greatest community in crypto. Cut, laminated and packed
+         in the same room they're printed in, and priced in PLS at the live rate.</p>
     </div>
 
     <div class="wand-bar">
