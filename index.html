@@ -27,6 +27,20 @@
     --sans:-apple-system,'SF Pro Display','Segoe UI',system-ui,'Helvetica Neue',Arial,sans-serif;
     --mono:ui-monospace,'SF Mono','Cascadia Mono','Roboto Mono',Menlo,Consolas,monospace;
     --settle:cubic-bezier(.22,.61,.36,1);
+  /* ── SECOND GRADIENT · midpoint bloom (FIRST PASS — tune these four tokens,
+     or delete this block plus the two `--mid-bloom-*` background layers on
+     #press and .counter to revert cleanly. Same stops as the hero gradient.) */
+  --mid-1:#16062B; --mid-2:#0A0418; --mid-3:#050208;
+  /* Width tracks the section, height is FIXED — both sections are full-bleed, so a
+     fixed vertical radius makes the two halves meet as one ellipse on the seam.
+     Two tokens rather than one parameterised by the anchor: a var() inside a custom
+     property resolves against the element that DECLARES it (:root here), so an
+     anchor overridden further down the tree would never be seen. */
+  --mid-spread:160% 520px;
+  --mid-bloom-up:radial-gradient(var(--mid-spread) at 50% 100%,
+    var(--mid-1) 0%, var(--mid-2) 48%, var(--mid-3) 76%, transparent 100%);
+  --mid-bloom-down:radial-gradient(var(--mid-spread) at 50% 0%,
+    var(--mid-1) 0%, var(--mid-2) 48%, var(--mid-3) 76%, transparent 100%);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -41,9 +55,6 @@
   /* ── FOIL: gradient-clipped text. Capped at 2 elements per page (kit rule) ── */
   .foil{background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
 
-  /* ── PRESS-BED ORNAMENT (§3.4 technique, press vocabulary) ── */
-  .press-mark{position:absolute;pointer-events:none;color:var(--ink);opacity:.16}
-  .press-mark svg{display:block}
 
   /* ── THE WINDOW: matte sticker backing (#2D2D2D) on pure black ── */
   .window{background:var(--field-panel);border-radius:16px;
@@ -103,7 +114,7 @@
   .rule-foil{width:64px;height:2px;margin:14px auto 0;background:var(--foil);border-radius:2px}
 
   /* ── THE PRESS FLOOR: sticker grid ── */
-  #press{background:linear-gradient(180deg,var(--field) 0%,#060608 100%)}
+  #press{background:var(--mid-bloom-up), linear-gradient(180deg,var(--field) 0%,#060608 100%)}
   #wand{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;
     transition:opacity .3s var(--settle)}
   .press-inner{position:relative;z-index:2}
@@ -112,6 +123,9 @@
     color:var(--ink);border:1px solid var(--hair);border-radius:999px;padding:12px 20px;
     font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
     cursor:pointer;min-height:44px}
+  /* display:inline-flex above outranks the UA [hidden] rule — without this the
+     control is visible but dead when JS never arrives to bind it. */
+  .wand-toggle[hidden]{display:none}
   .wand-toggle .swatch{width:26px;height:6px;border-radius:3px;background:var(--foil);opacity:.35;
     transition:opacity .2s var(--settle)}
   .wand-toggle[aria-pressed="true"] .swatch{opacity:1}
@@ -120,7 +134,7 @@
 
   .shelf{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:20px;
     position:relative;z-index:2}
-  /* 20% opaque card face — the near-black press bed and the wand trail read through it.
+  /* 20% opaque card face — the near-black press bed and the wand ripple reads through it.
      Only the backing is translucent; type and artwork stay fully opaque. */
   .item{padding:18px 18px 22px;display:flex;flex-direction:column;
     background:rgba(45,45,45,.2)}
@@ -150,7 +164,7 @@
     font-size:13.5px;line-height:1.7;color:var(--ink-faint);position:relative;z-index:2}
 
   /* ── THE COUNTER: payment band ── */
-  .counter{background:var(--field-deep);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+  .counter{background:var(--mid-bloom-down), var(--field-deep);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
   .counter-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:stretch;
     position:relative;z-index:2}
   @media(max-width:840px){.counter-grid{grid-template-columns:1fr}}
@@ -247,26 +261,6 @@
       <stop offset=".4974" stop-color="#8000FF"/><stop offset=".7499" stop-color="#E619E6"/>
       <stop offset=".9991" stop-color="#FF0000"/>
     </linearGradient>
-    <g id="press-motif" stroke="currentColor" fill="none" stroke-width="1">
-      <!-- registration target -->
-      <circle cx="150" cy="140" r="54"/><circle cx="150" cy="140" r="22"/>
-      <circle cx="150" cy="140" r="72" stroke-dasharray="3 9"/>
-      <path d="M150 44v58M150 178v58M56 140h58M186 140h58"/>
-      <!-- crop marks -->
-      <path d="M28 62V28h34M492 28h-34v34M28 498v34h34M492 532h-34v-34"/>
-      <!-- plotter cut path -->
-      <path d="M62 318h336a38 38 0 0 1 38 38v128a38 38 0 0 1-38 38H100a38 38 0 0 1-38-38z"
-            stroke-dasharray="8 7"/>
-      <!-- halftone arc -->
-      <circle cx="330" cy="152" r="3.5"/><circle cx="362" cy="168" r="3"/><circle cx="392" cy="188" r="2.6"/>
-      <circle cx="418" cy="212" r="2.2"/><circle cx="440" cy="240" r="1.8"/><circle cx="457" cy="271" r="1.4"/>
-      <circle cx="300" cy="142" r="4"/><circle cx="268" cy="138" r="4.4"/>
-      <!-- trim hatch -->
-      <path d="M420 60l52 52M440 44l52 52M400 76l52 52"/>
-      <!-- second, smaller target -->
-      <circle cx="404" cy="392" r="26"/><circle cx="404" cy="392" r="9"/>
-      <path d="M404 350v26M404 408v26M362 392h26M420 392h26"/>
-    </g>
   </defs>
 </svg>
 
@@ -274,12 +268,6 @@
   <div class="edge-text edge-l">Chain ID 369 · PulseChain core tokens only</div>
   <div class="edge-text edge-r">Die-cut · weatherproof vinyl · printed in-house</div>
 
-  <div class="press-mark" style="right:-150px;top:-70px" aria-hidden="true">
-    <svg width="520" height="560" viewBox="0 0 520 560"><use href="#press-motif"/></svg>
-  </div>
-  <div class="press-mark" style="left:-190px;bottom:-120px;opacity:.1;transform:scaleX(-1)" aria-hidden="true">
-    <svg width="430" height="430" viewBox="40 130 430 430"><use href="#press-motif"/></svg>
-  </div>
 
   <div class="wrap hero">
     <div class="crest">
@@ -327,9 +315,6 @@
 <!-- ══ THE PRESS FLOOR ══ -->
 <section id="press">
   <canvas id="wand" aria-hidden="true"></canvas>
-  <div class="press-mark" style="left:-170px;top:40px;opacity:.1" aria-hidden="true">
-    <svg width="460" height="500" viewBox="30 20 460 500"><use href="#press-motif"/></svg>
-  </div>
 
   <div class="wrap press-inner">
     <div class="sec-head reveal">
@@ -343,7 +328,7 @@
     <div class="wand-bar">
       <button type="button" class="wand-toggle" id="wand-toggle" aria-pressed="false" hidden>
         <span class="swatch" aria-hidden="true"></span>
-        Wand trail <span class="wand-state">OFF</span>
+        Wand ripple <span class="wand-state">OFF</span>
       </button>
     </div>
 
@@ -467,9 +452,6 @@
 
 <!-- ══ THE COUNTER ══ -->
 <section class="counter" id="counter">
-  <div class="press-mark" style="right:-160px;top:-60px;opacity:.1" aria-hidden="true">
-    <svg width="440" height="470" viewBox="180 40 440 470"><use href="#press-motif"/></svg>
-  </div>
   <div class="wrap">
     <div class="counter-grid">
       <div class="pitch reveal">
@@ -504,9 +486,6 @@
 
 <!-- ══ IN THE WILD ══ -->
 <section id="wild">
-  <div class="press-mark" style="left:-200px;bottom:-140px;opacity:.08" aria-hidden="true">
-    <svg width="480" height="480" viewBox="60 90 480 480"><use href="#press-motif"/></svg>
-  </div>
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">In the wild</div>
@@ -590,9 +569,6 @@
 </section>
 
 <footer>
-  <div class="press-mark" style="left:50%;top:-120px;margin-left:-260px;opacity:.08" aria-hidden="true">
-    <svg width="520" height="420" viewBox="0 60 520 420"><use href="#press-motif"/></svg>
-  </div>
   <div class="wrap">
     <div class="hallmarks">
       <div class="hallmark">PulseChain core tokens only</div>
@@ -676,7 +652,7 @@
   });
 })();
 
-/* ── WAND TRAIL (the one hero moment, §5.0.5) ────────────────────────────── */
+/* ── WAND RIPPLE (the one hero moment, §5.0.5) ───────────────────────────── */
 (function(){
   var sec = document.getElementById('press');
   var cv  = document.getElementById('wand');
@@ -686,8 +662,9 @@
   var ctx = cv.getContext('2d');
   var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : {matches:false};
   var STOPS = ['#00EAFF','#0080FF','#8000FF','#E619E6','#FF0000'];
-  var LIFE = 700;
-  var pts = [], raf = 0, on = false, w = 0, h = 0;
+  var LIFE = 900;          /* a ripple wants longer to spread than a trail did */
+  var GAP  = 26;           /* min pointer travel between ripples, in px */
+  var pts = [], raf = 0, on = false, w = 0, h = 0, lx = -1e4, ly = -1e4, seq = 0;
 
   function load(){ try { return localStorage.getItem('plspress-wand'); } catch(e){ return null; } }
   function save(v){ try { localStorage.setItem('plspress-wand', v); } catch(e){} }
@@ -704,34 +681,35 @@
 
   function draw(){
     raf = 0;
-    var now = performance.now(), i, p, age;
+    var now = performance.now(), i, p, age, e, r, k;
     for (i = pts.length - 1; i >= 0; i--) if (now - pts[i].t > LIFE) pts.splice(i, 1);
     ctx.clearRect(0, 0, w, h);
 
-    if (pts.length > 1) {
-      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      for (i = 1; i < pts.length; i++) {
-        var a = pts[i-1], b = pts[i];
-        age = (now - b.t) / LIFE;
-        var g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-        g.addColorStop(0, STOPS[i % 5]);
-        g.addColorStop(1, STOPS[(i + 1) % 5]);
-        ctx.strokeStyle = g;
-        ctx.globalAlpha = Math.max(0, 1 - age) * 0.85;
-        ctx.lineWidth = Math.max(1, 11 * (1 - age));
-        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.lineCap = 'round';
+    for (i = 0; i < pts.length; i++) {
+      p = pts[i];
+      age = (now - p.t) / LIFE;
+      if (age < 0 || age > 1) continue;
+      e = 1 - Math.pow(1 - age, 3);          /* spreads fast, then eases out */
+      /* two concentric rings, the inner one lagging — that lag is what reads
+         as a ripple rather than a dot that grew. */
+      for (k = 0; k < 2; k++) {
+        r = (7 + p.r * e) - k * 13;
+        if (r <= 0.5) continue;
+        ctx.strokeStyle = STOPS[(p.i + k) % 5];
+        ctx.globalAlpha = Math.max(0, 1 - age) * (k ? 0.30 : 0.62);
+        ctx.lineWidth = Math.max(0.6, (k ? 1.4 : 2.6) * (1 - age));
+        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.2832); ctx.stroke();
       }
-      for (i = 0; i < pts.length; i += 2) {
-        p = pts[i]; age = (now - p.t) / LIFE;
-        if (age > 1) continue;
-        ctx.globalAlpha = (1 - age) * 0.75;
-        ctx.fillStyle = STOPS[i % 5];
-        ctx.beginPath();
-        ctx.arc(p.x + p.dx * age * 30, p.y + p.dy * age * 30, Math.max(0, 2.4 * (1 - age)), 0, 6.2832);
-        ctx.fill();
+      /* the crest: a soft fill that fades out as the ring escapes it */
+      if (age < 0.55) {
+        ctx.globalAlpha = (0.55 - age) * 0.5;
+        ctx.fillStyle = STOPS[p.i % 5];
+        ctx.beginPath(); ctx.arc(p.x, p.y, 5 * (1 - age / 0.55), 0, 6.2832); ctx.fill();
       }
-      ctx.globalAlpha = 1;
     }
+    ctx.globalAlpha = 1;
+
     if (pts.length) raf = requestAnimationFrame(draw);
   }
 
@@ -740,14 +718,18 @@
     var r = sec.getBoundingClientRect();
     var x = e.clientX - r.left, y = e.clientY - r.top;
     if (x < 0 || y < 0 || x > w || y > h) return;
-    pts.push({x:x, y:y, t:performance.now(), dx:(Math.random()-0.5), dy:(Math.random()-0.5)-0.45});
-    if (pts.length > 28) pts.shift();
+    /* discrete drops, not a smear: only ring out once the pointer has actually
+       travelled. Without this it degenerates back into a trail. */
+    if ((x - lx) * (x - lx) + (y - ly) * (y - ly) < GAP * GAP) return;
+    lx = x; ly = y;
+    pts.push({x:x, y:y, t:performance.now(), r:46 + Math.random() * 26, i:(seq++) % 5});
+    if (pts.length > 14) pts.shift();
     if (!raf) raf = requestAnimationFrame(draw);
   }
 
   function stop(){
     if (raf) { cancelAnimationFrame(raf); raf = 0; }
-    pts = []; ctx.clearRect(0, 0, w, h);
+    pts = []; lx = ly = -1e4; ctx.clearRect(0, 0, w, h);
   }
 
   function set(v){

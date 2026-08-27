@@ -39,9 +39,10 @@ holographic foil. A holo foil is a sticker. That is the whole design.
 3. **Green affirm chip** → in-stock badges, footer hallmarks, the live-feed dot. Their own device.
 4. **Kiss-cut die line** → dashed contour inset on every sticker face; peel-lift on
    hover/focus/active (`translateY(-5px) rotate(-1.2deg)`).
-5. **Press-bed ornament** → §3.4 technique with a press vocabulary instead of filigree: registration
-   targets, crop marks, plotter cut-paths, halftone arcs. One motif (`#press-motif`), deployed
-   5× at different crops/mirrors/opacities (.16 → .10 → .08).
+5. ~~**Press-bed ornament**~~ → *removed 2026-08-27 at the client's request.* It was the §3.4
+   technique in a press vocabulary — registration targets, crop marks, plotter cut-paths, halftone
+   arcs, one motif deployed 5× at .16 → .08. The grammar now carries on the die lines, the foil
+   edges and the halftone map alone. Restore with `git revert` if it is wanted back.
 6. **Voice inversion** — the bridge uses zero serif and the client asked for a large bold header,
    so **heavy system sans = things of value, mono = apparatus**. This deliberately inverts the
    kit's serif-is-value rule of thumb, per §III's adaptation clause. System stacks only (law 3).
@@ -60,6 +61,27 @@ holographic foil. A holo foil is a sticker. That is the whole design.
 - **Simple, easy to use** — one screen per idea, six products, no menus, no cart ceremony.
 - **PulseChain core tokens only** — PLS, PLSX, HEX, INC, chain ID 369, priced live.
 
+## Background & motion revisions (2026-08-27, client-directed)
+
+1. **Ornament removed** (above). Nothing else about the backgrounds changed — the hero gradient is
+   untouched.
+2. **A second gradient at the page midpoint.** The document midpoint lands on the `#press` →
+   `.counter` seam at every gated width (1280: seam 2435 / mid 2471; 390: seam 4947 / mid 4481,
+   inside the bloom's 520px reach). It is drawn as two halves of one ellipse — `--mid-bloom-up`
+   anchored to the bottom of `#press`, `--mid-bloom-down` to the top of `.counter` — sharing the
+   hero's exact stops. The vertical radius is a **fixed length**, not a percentage, so both halves
+   are the same size and meet cleanly despite the two sections having very different heights.
+   **First pass:** the four tokens (`--mid-1..3`, `--mid-spread`) sit together at the top of the
+   stylesheet; tune or delete them to adjust or revert.
+   *Gotcha worth keeping:* a `var()` inside a custom property resolves against the element that
+   **declares** it, so a single `--mid-bloom` parameterised by an overridable `--mid-anchor` silently
+   used `:root`'s value and bloomed at the centre of `#press` instead of its edge. Two tokens, not one.
+3. **Wand trail → wand ripple.** Same canvas, same toggle, same persistence and reduced-motion
+   defaults; the drawing changed from a tapering gradient polyline to discrete expanding rings —
+   two concentric strokes with the inner one lagging, plus a crest that fades as the ring escapes
+   it. Ripples only spawn once the pointer has travelled 26px, which is what stops it collapsing
+   back into a trail. `LIFE` 700ms → 900ms.
+
 ## Law 4 — the live element
 
 CoinGecko keyless (`access-control-allow-origin: *`), ids `pulsechain`, `pulsex`, `hex`,
@@ -73,11 +95,11 @@ live rate**. Seeded values in markup; every write guarded; both terminal states 
 |---|---|
 | Three-viewport width law | 390/834/1280 — `scrollWidth` == viewport exactly, 0 JS errors |
 | Single file, zero dependencies | 59kB, one file, no CDN/webfont/build step |
-| CWV (390, 4× CPU throttle, worst of 3) | **LCP 464ms**, **CLS 0.0040**, flat through a full scroll cycle |
-| JS disabled | 6 products, 10 sightings, 10 pins, 1,672 map dots, seeded prices, no dead controls |
+| CWV (390, 4× CPU throttle, worst of 3) | **LCP 356ms**, **CLS 0.0000**, flat through a full scroll cycle |
+| JS disabled | 6 products, 10 sightings, 10 pins, 1,672 map dots, seeded prices, wand control genuinely `display:none` |
 | `prefers-reduced-motion` | 12 reveals all land on end-states, wand defaults off, canvas opacity 0 |
 | Touch targets @390 | every interactive element ≥44px tall |
-| Slop gate (`impeccable@3.3.1`) | 9 findings, all three categories documented in `.impeccable/config.json`; every genuine finding fixed |
+| Slop gate (`impeccable@3.3.1`) | 10 findings, all four categories documented in `.impeccable/config.json`; every genuine finding fixed |
 
 Ornament bleeds off-edge at all three widths and is contained by each section's own
 `overflow:hidden` — that is why the widths match exactly despite elements extending past the
