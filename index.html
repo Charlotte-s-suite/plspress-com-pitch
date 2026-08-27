@@ -667,6 +667,8 @@
   var STOPS = ['#00EAFF','#0080FF','#8000FF','#E619E6','#FF0000'];
   var LIFE = 900;          /* a ripple wants longer to spread than a trail did */
   var GAP  = 26;           /* min pointer travel between ripples, in px */
+  var TILT = 0.38;         /* vertical squash — the whole 3D read hangs off this */
+  var PI   = Math.PI, TAU = PI * 2;
   var pts = [], raf = 0, on = false, w = 0, h = 0, lx = -1e4, ly = -1e4, seq = 0;
 
   function load(){ try { return localStorage.getItem('plspress-wand'); } catch(e){ return null; } }
@@ -684,7 +686,7 @@
 
   function draw(){
     raf = 0;
-    var now = performance.now(), i, p, age, e, r, k;
+    var now = performance.now(), i, p, age, e, k, rx, ry, lw, a, g;
     for (i = pts.length - 1; i >= 0; i--) if (now - pts[i].t > LIFE) pts.splice(i, 1);
     ctx.clearRect(0, 0, w, h);
 
@@ -694,21 +696,61 @@
       age = (now - p.t) / LIFE;
       if (age < 0 || age > 1) continue;
       e = 1 - Math.pow(1 - age, 3);          /* spreads fast, then eases out */
-      /* two concentric rings, the inner one lagging — that lag is what reads
-         as a ripple rather than a dot that grew. */
-      for (k = 0; k < 2; k++) {
-        r = (7 + p.r * e) - k * 13;
-        if (r <= 0.5) continue;
-        ctx.strokeStyle = STOPS[(p.i + k) % 5];
-        ctx.globalAlpha = Math.max(0, 1 - age) * (k ? 0.30 : 0.62);
-        ctx.lineWidth = Math.max(0.6, (k ? 1.4 : 2.6) * (1 - age));
-        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.2832); ctx.stroke();
+
+      /* Rings are drawn foreshortened — TILT squashes them on the Y axis, so they
+         read as circles lying on a surface seen at an angle rather than as flat
+         discs facing the viewer. The outer ring is then stroked in three weights:
+         the far (upper) half falls away, the near (lower) half carries full
+         weight, and a short white arc on the near-left shoulder takes the
+         specular — one light, always in the same place. That consistency is what
+         sells the depth. The inner ring stays a single stroke and instead rides
+         ABOVE the plane, so the pair reads as a standing crest rather than two
+         flat outlines. Draw-call budget matters here: this runs every frame on an
+         eight-year-old tablet. */
+      rx = 7 + p.r * e;
+      ry = rx * TILT;
+      a  = Math.max(0, 1 - age);
+      lw = Math.max(0.8, 4.0 * (1 - age));
+      ctx.strokeStyle = STOPS[p.i % 5];
+      ctx.globalAlpha = a * 0.28;                       /* far half */
+      ctx.lineWidth = lw * 0.6;
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, rx, ry, 0, PI, TAU); ctx.stroke();
+      ctx.globalAlpha = a;                              /* near half */
+      ctx.lineWidth = lw;
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, rx, ry, 0, 0, PI); ctx.stroke();
+      ctx.globalAlpha = a * 0.60;                       /* specular */
+      ctx.lineWidth = lw * 1.4;
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, rx, ry, 0, PI * 0.66, PI * 0.90); ctx.stroke();
+
+      rx -= 15;                                         /* the lifted inner crest */
+      if (rx > 1) {
+        ctx.strokeStyle = STOPS[(p.i + 1) % 5];
+        ctx.globalAlpha = a * 0.58;
+        ctx.lineWidth = Math.max(0.8, 2.2 * (1 - age));
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y - 7 * (1 - age), rx, rx * TILT, 0, 0, TAU);
+        ctx.stroke();
       }
-      /* the crest: a soft fill that fades out as the ring escapes it */
+
+      /* The crest is a lit bead, not a flat dot: a solid body, a highlight offset
+         up and left to match where the ring's specular lands, and the contact
+         patch it sits in — flattened by the same tilt. Three fills; a radial
+         gradient per bead per frame was measurably more expensive for no more
+         depth at this size. It also rises and settles, so the drop reads as
+         having left the surface and come back to it. */
       if (age < 0.55) {
-        ctx.globalAlpha = (0.55 - age) * 0.5;
-        ctx.fillStyle = STOPS[p.i % 5];
-        ctx.beginPath(); ctx.arc(p.x, p.y, 5 * (1 - age / 0.55), 0, 6.2832); ctx.fill();
+        var t = age / 0.55, cr = 9 * (1 - t), lift = Math.sin(t * PI) * 7;
+        if (cr > 0.4) {
+          ctx.globalAlpha = (1 - t) * 0.45;
+          ctx.fillStyle = STOPS[p.i % 5];
+          ctx.beginPath(); ctx.ellipse(p.x, p.y, cr * 0.9, cr * 0.9 * TILT, 0, 0, TAU); ctx.fill();
+          ctx.globalAlpha = (1 - t) * 0.9;
+          ctx.beginPath(); ctx.arc(p.x, p.y - lift, cr, 0, TAU); ctx.fill();
+          ctx.globalAlpha = (1 - t) * 0.75;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.beginPath(); ctx.arc(p.x - cr * 0.34, p.y - lift - cr * 0.38, cr * 0.34, 0, TAU); ctx.fill();
+        }
       }
     }
     ctx.globalAlpha = 1;
@@ -726,7 +768,7 @@
     if ((x - lx) * (x - lx) + (y - ly) * (y - ly) < GAP * GAP) return;
     lx = x; ly = y;
     pts.push({x:x, y:y, t:performance.now(), r:46 + Math.random() * 26, i:(seq++) % 5});
-    if (pts.length > 14) pts.shift();
+    if (pts.length > 12) pts.shift();
     if (!raf) raf = requestAnimationFrame(draw);
   }
 

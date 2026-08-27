@@ -83,11 +83,24 @@ holographic foil. A holo foil is a sticker. That is the whole design.
    card. `.sec-head h2` picked up `max-width:22ch` + `text-wrap:balance` so the longer head does
    not rag to a one-word last line; `.sec-head p` picked up `text-wrap:pretty`. Both degrade to
    normal wrapping where unsupported.
-4. **Wand trail → wand ripple.** Same canvas, same toggle, same persistence and reduced-motion
-   defaults; the drawing changed from a tapering gradient polyline to discrete expanding rings —
-   two concentric strokes with the inner one lagging, plus a crest that fades as the ring escapes
-   it. Ripples only spawn once the pointer has travelled 26px, which is what stops it collapsing
-   back into a trail. `LIFE` 700ms → 900ms.
+4. **Wand trail → wand ripple, then ripple → ripple in perspective.** Same canvas, same toggle,
+   same persistence and reduced-motion defaults throughout; only the drawing changed.
+   - *First pass:* a tapering gradient polyline became discrete expanding rings. Ripples spawn
+     only once the pointer has travelled 26px, which is what stops it collapsing back into a
+     trail. `LIFE` 700ms → 900ms.
+   - *Depth pass (client asked for "more 3D"):* rings are now **foreshortened ellipses**
+     (`TILT` 0.38 on the Y axis), so they read as circles lying on a surface seen at an angle.
+     The outer ring is stroked in three weights — far half ghosted, near half full, and a short
+     **white** arc on the near-left shoulder for the specular. The highlight is white on purpose:
+     a hue shift there reads as a colour band, not as light. The inner ring rides 7px above the
+     plane so the pair reads as a standing crest. The crest bead has a body, an offset highlight
+     and a tilt-flattened contact patch, and rises and settles on a sine.
+   - **One light, always in the same place** is the whole trick; everything else follows from it.
+   - *Cost:* the first depth build ran 6 strokes + a per-bead radial gradient per ripple and
+     measured p50 49.9ms/frame at 6× CPU throttle against 33.3ms for the flat version — a real
+     regression on the oldest device we design for. Rebuilt at 4 strokes + 3 flat fills and capped
+     at 12 live ripples: **p50 33.3ms, p95 50.0ms, max 50.1ms**, i.e. level with the flat version
+     on the median and steadier at the tail (it was p95 66.7 / max 99.9). Idle baseline is 16.7ms.
 
 ## Law 4 — the live element
 
