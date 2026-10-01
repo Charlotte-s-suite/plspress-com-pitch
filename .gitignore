@@ -1,12 +1,36 @@
-# ── This repo is PUBLIC and serves its own root over HTTP. Anything committed here
-# becomes a live URL, not just readable source. Internal documents live in the private
-# merritt-studio repo (docs/tenants/<this-repo>/), never here.
-# Removed 2026-09-03 after a client brief and the fleet manifest were found publicly served.
-BRIEF.md
-HANDOFF.md
-DRIFT.md
-DESIGN.md
-TODO.md
-NOTES.md
-ROOM.json
-.hq/
+# ─────────────────────────────────────────────────────────────────────────────
+# This repo is PUBLIC and GitHub Pages serves its ROOT. A file committed here is
+# a live URL, not merely readable source. The store is welcome to be public —
+# internal material is not.
+#
+# Deny by TYPE, never by the name of the last file that leaked
+# (merritt-studio/docs/SHARING-PROTOCOL.md, rule 1). Internal documents, QA
+# evidence and tool config live in the private studio repo at
+# merritt-studio/docs/tenants/plspress-com-pitch/.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# documents and machine-readable config — none of it belongs on a storefront
+*.md
+*.json
+*.jsonc
+*.toml
+*.yml
+*.yaml
+*.txt
+*.csv
+*.log
+
+# dotfiles and dot-directories (.impeccable, .hq, .claude, editor cruft)
+.*
+
+# internal working directories
+/gate/
+/tools/
+/src/
+/scratch/
+/notes/
+
+# ── the storefront itself, re-admitted explicitly ────────────────────────────
+!.gitignore
+!.nojekyll
+!/library/.gitkeep
